@@ -15,7 +15,8 @@
       #filesystem."/".device = "/dev/disk/by-label/nixos";
       # "xfs" "ata_piix"
     ];
-    
+  boot.kernelPackages = pkgs.linuxPackages_3_8; 
+
   # Use the GRUB 2 boot loader.
   boot.loader.grub.enable = true;
   boot.loader.grub.version = 2;
@@ -96,8 +97,12 @@
        };
   };
 
+#  system.activationScripts.somefix = {
+#    deps = [ ];
+#    text = "ln -fs /tmp/Machine2.pm /nix/store/ixrbh53cvc5q2ys2zr72p19xr1x2v94l-nixos-test-driver/lib/perl5/site_perl/Machine.pm";
+#  };
 
-environment = {
+  environment = {
     enableBashCompletion = true;
     interactiveShellInit = ''
 #        export PATH=$HOME/bin:$HOME/node_modules/bin:$PATH:$HOME/bin/launch
@@ -108,7 +113,12 @@ environment = {
 #        export NODE_PATH=$HOME/.node_modules
     '';
     systemPackages = with pkgs; [
-#      acpitool
+      acpitool
+      acpi
+      linuxPackages_3_9.virtualbox
+      qemu
+      kvm
+      colordiff
 #      alsaLib
 #      alsaPlugins
 #      alsaUtils
@@ -117,7 +127,7 @@ environment = {
 #      cpufrequtils
 #      cryptsetup
 #      ddrescue
-#      file
+      file
 #      gnupg
 #      gnupg1
 #      keychain
@@ -129,7 +139,9 @@ environment = {
 #      p7zip
 #      parted
 #      pinentry
-#      htop
+      #GConf
+      gnome.GConf
+      htop
 #      powertop
 #      pwgen
 #      screen
@@ -141,13 +153,13 @@ environment = {
 #      units
 #      unrar
 #      unzip
-#      wget
+      wget
 #      w3m
 #      zsh
 #      bash
 #      weechat
 #      nodejs
-#
+       virtmanager
 #      stdenv
 #      pythonPackages.virtualenv
 #      pythonPackages.ipython
@@ -198,7 +210,7 @@ environment = {
       gnome.gnome_keyring
 #
 #      # editor and utils
-#      vimHugeX # best editor
+      vimHugeX # best editor
 ##      ctags # used in vim
 #
 #      # needed for vim's syntastic
@@ -211,8 +223,8 @@ environment = {
 #      #zptlint
 #
 #      # browsers
-##      chromiumWrapper # browser
-##      firefoxWrapper # best browser
+      chromiumWrapper # browser
+      firefoxWrapper # best browser
 ##      opera # browser
 #
 #      # apps
