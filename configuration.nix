@@ -5,8 +5,11 @@
 { config, pkgs, ... }:
 
 {
+#  require = [ 
+# ];
   require =
     [ # Include the results of the hardware scan.
+<nixos/modules/programs/virtualbox.nix>
       ./hardware-configuration.nix
     ];
 
@@ -15,16 +18,20 @@
       #filesystem."/".device = "/dev/disk/by-label/nixos";
       # "xfs" "ata_piix"
     ];
-  boot.kernelPackages = pkgs.linuxPackages_3_8; 
+  boot.kernelPackages = pkgs.linuxPackages_3_2 // {
+    virtualbox = pkgs.linuxPackages.virtualbox.override {
+      enableExtensionPack = true;
+    };
+  }; 
 
   # Use the GRUB 2 boot loader.
   boot.loader.grub.enable = true;
   boot.loader.grub.version = 2;
 
   # Define on which hard drive you want to install Grub.
-  boot.loader.grub.device = "/dev/sda";
+  boot.loader.grub.device = "/dev/sdb";
 
-  networking.hostName = "nixos-eee"; # Define your hostname.
+  networking.hostName = "nixos-think"; # Define your hostname.
   #networking.wireless.enable = true;  # Enables Wireless.
   networking.networkmanager.enable = true;  # Enables Wireless.
 
@@ -33,6 +40,7 @@
   #networking.defaultGateway = "192.168.1.1";
   #networking.nameservers = [ "8.8.8.8" ];
   #networking.enableIPv6 = false;
+
 
   
   #networking.wicd.enable = true;
@@ -90,7 +98,7 @@
   users.extraUsers = {
     lojze = {
         createHome = true;
-        extraGroups = [ "wheel" "networkmanager" ];
+        extraGroups = [ "wheel" "networkmanager" "vboxusers"  ];
         group = "users";
         home = "/home/lojze";
         shell = "/run/current-system/sw/bin/bash";
@@ -101,6 +109,7 @@
 #    deps = [ ];
 #    text = "ln -fs /tmp/Machine2.pm /nix/store/ixrbh53cvc5q2ys2zr72p19xr1x2v94l-nixos-test-driver/lib/perl5/site_perl/Machine.pm";
 #  };
+  hardware.pulseaudio.enable = true;
 
   environment = {
     enableBashCompletion = true;
@@ -116,9 +125,25 @@
       acpitool
       acpi
       linuxPackages_3_9.virtualbox
+      linuxPackages_3_9.virtualboxGuestAdditions
       qemu
       kvm
       colordiff
+      xscreensaver
+      pulseaudio
+      pavucontrol
+      xfce.xfce4panel
+      xfce.terminal
+      vlc
+      pidgin
+      pidginotr
+      superTux
+      superTuxKart
+      munin
+      iotop
+
+
+
 #      alsaLib
 #      alsaPlugins
 #      alsaUtils
@@ -167,12 +192,12 @@
       gitFull
 #      gitAndTools.tig
 #      gitAndTools.gitAnnex
-#      lsof
+      lsof
 #      mercurialFull
 #      bazaar
 #      bazaarTools
 #
-#      mosh
+      mosh
 #      #kde48.calligra
 #
 #      msmtp
