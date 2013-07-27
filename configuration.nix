@@ -18,9 +18,9 @@
       #filesystem."/".device = "/dev/disk/by-label/nixos";
       # "xfs" "ata_piix"
     ];
-  boot.kernelPackages = pkgs.linuxPackages_3_2 // {
+  boot.kernelPackages = pkgs.linuxPackages_3_4 // {
     virtualbox = pkgs.linuxPackages.virtualbox.override {
-      enableExtensionPack = true;
+#      enableExtensionPack = true; #should be 3_2 but with 3_4 also works even that is commented out
     };
   }; 
 
@@ -32,6 +32,10 @@
   boot.loader.grub.device = "/dev/sdb";
 
   networking.hostName = "nixos-think"; # Define your hostname.
+  networking.extraHosts = "54.230.44.9 cache.nixos.org";
+
+
+
   #networking.wireless.enable = true;  # Enables Wireless.
   networking.networkmanager.enable = true;  # Enables Wireless.
 
@@ -70,9 +74,18 @@
   #   defaultLocale = "en_US.UTF-8";
   # };
 
+
+
+
   # List services that you want to enable:
   services = {
-    
+   
+    postgresql.enable = true;
+    postgresql.package = pkgs.postgresql;
+    redis.enable = true;
+
+
+ 
   # Enable the OpenSSH daemon
     openssh.enable = true;
     openssh.permitRootLogin = "yes";
@@ -101,6 +114,13 @@
         extraGroups = [ "wheel" "networkmanager" "vboxusers"  ];
         group = "users";
         home = "/home/lojze";
+        shell = "/run/current-system/sw/bin/bash";
+       };
+    gitlabuser = {
+        createHome = true;
+        extraGroups = [ "gitlabuser" ];
+        group = "users";
+        home = "/home/gitlab";
         shell = "/run/current-system/sw/bin/bash";
        };
   };
@@ -143,6 +163,9 @@
       iotop
 
 
+       # gitlab
+       mysql
+       # gitlab end
 
 #      alsaLib
 #      alsaPlugins
