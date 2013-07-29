@@ -5,6 +5,14 @@
 { config, pkgs, ... }:
 
 {
+  nixpkgs.config = {
+    packageOverrides = pkgs: {
+        nixos.pkgs.gnome.vte = pkgs.callPackage /home/lojze/nixos/nixpkgs/pkgs/desktops/gnome-2/desktop/vte/default.nix {};
+      
+      };
+  };
+
+
 #  require = [ 
 # ];
   require =
@@ -149,6 +157,9 @@
 #        export NODE_PATH=$HOME/.node_modules
     '';
     systemPackages = with pkgs; [
+      gnome_terminator
+      gnome.vte
+
       acpitool
       acpi
       linuxPackages_3_9.virtualbox
