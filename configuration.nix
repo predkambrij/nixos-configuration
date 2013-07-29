@@ -123,6 +123,13 @@
         home = "/home/gitlab";
         shell = "/run/current-system/sw/bin/bash";
        };
+    envuser = {
+        createHome = true;
+        #extraGroups = [ "envuser" ];
+        group = "users";
+        home = "/home/envuser";
+        shell = "/run/current-system/sw/bin/bash";
+       };
   };
 
 #  system.activationScripts.somefix = {
@@ -155,13 +162,83 @@
       xfce.xfce4panel
       xfce.terminal
       vlc
+
+      rdesktop
+
+      xlibs.libxcb
       pidgin
       pidginotr
+      libpng
+      gstreamer
+
+      xorg_sys_opengl
+      gcc
+      intltool
+      gettext
+      perlPackages.XMLParser
+      glib
+      pkgconfig
+
+
+     eclipses.eclipse_sdk_422
+
+#      stdenv
+#      fetchurl 
+      pkgconfig 
+      gtk 
+      gtkspell 
+      aspell
+      gstreamer 
+      gst_plugins_base 
+##startupnotification
+      gettext
+      perl 
+      perlXMLParser 
+      libxml2 
+      nss 
+      nspr 
+      farsight2
+#  libXScrnSaver
+      ncurses 
+      avahi 
+      dbus 
+      dbus_glib 
+dbus_libs  
+      intltool 
+      libidn
+#      lib 
+      python
+      gnome.gtk
+      gnome.pango
+      gnome.cairo
+      gdb
+      gdk_pixbuf
+      atk
+      freetype
+      x11
+      xlibs.libX11
+      xlibs.xproto
+      xlibs.kbproto
+
+      sshfsFuse
+
+      openssl
+      gmime
+      pyopenssl
+
+      gnumake
+
+      xlibs.xhost
+
       superTux
       superTuxKart
       munin
       iotop
-
+     
+     tunctl
+     screen
+     openconnect
+     dhcp
 
        # gitlab
        mysql
