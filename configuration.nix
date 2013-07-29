@@ -5,12 +5,12 @@
 { config, pkgs, ... }:
 
 {
-  nixpkgs.config = {
-    packageOverrides = pkgs: {
-        nixos.pkgs.gnome.vte = pkgs.callPackage /home/lojze/nixos/nixpkgs/pkgs/desktops/gnome-2/desktop/vte/default.nix {};
-      
-      };
-  };
+#  nixpkgs.config = {
+#    packageOverrides = pkgs: {
+#        nixos.pkgs.gnome.vte = pkgs.callPackage /home/lojze/nixos/nixpkgs/pkgs/desktops/gnome-2/desktop/vte/default.nix {};
+#      
+#      };
+#  };
 
 
 #  require = [ 
@@ -40,7 +40,7 @@
   boot.loader.grub.device = "/dev/sdb";
 
   networking.hostName = "nixos-think"; # Define your hostname.
-  networking.extraHosts = "54.230.44.9 cache.nixos.org";
+  networking.extraHosts = "54.230.44.9 cache.nixos.org\n54.217.220.47 nixos.org";
 
 
 
@@ -155,10 +155,15 @@
 #        export FULLNAME="Rok Garbas"
 #        export PIP_DOWNLOAD_CACHE=$HOME/.pip_download_cache
 #        export NODE_PATH=$HOME/.node_modules
+
+
+#export NIX_DEV_ROOT=/home/lojze/nixdev/nixdev
+#. /home/lojze/nixdev/nixdev/nixrc
+
     '';
     systemPackages = with pkgs; [
       gnome_terminator
-      gnome.vte
+      #gnome.vte
 
       acpitool
       acpi
