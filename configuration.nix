@@ -8,6 +8,16 @@
 #  nixpkgs.config = {
 #    packageOverrides = pkgs: {
 #        nixos.pkgs.gnome.vte = pkgs.callPackage /home/lojze/nixos/nixpkgs/pkgs/desktops/gnome-2/desktop/vte/default.nix {};
+#        #pkgs.gnome.vte = pkgs.callPackage /home/lojze/nixos/nixpkgs/pkgs/desktops/gnome-2/desktop/vte/default.nix {};
+#        nixos.pkgs.xfce.terminal = pkgs.callPackage /home/lojze/nixdev/nixdev/nixpkgs/pkgs/desktops/xfce/applications/terminal.nix {};
+#      
+#      };
+#  };
+#  nixpkgs.config = {
+#    packageOverrides = pkgs: with pkgs; {
+#        gnome.vte = pkgs.callPackage /home/lojze/nixos/nixpkgs/pkgs/desktops/gnome-2/desktop/vte/default.nix {};
+#        #pkgs.gnome.vte = pkgs.callPackage /home/lojze/nixos/nixpkgs/pkgs/desktops/gnome-2/desktop/vte/default.nix {};
+#        xfce.terminal = pkgs.callPackage /home/lojze/nixdev/nixdev/nixpkgs/pkgs/desktops/xfce/applications/terminal.nix {};
 #      
 #      };
 #  };
@@ -20,6 +30,8 @@
 <nixos/modules/programs/virtualbox.nix>
       ./hardware-configuration.nix
     ];
+
+  boot.kernelModules = [ "tun" "fuse" ];
 
   boot.initrd.kernelModules =
     [ # Specify all kernel modules that are necessary for mounting the root
@@ -88,7 +100,7 @@
   # List services that you want to enable:
   services = {
    
-    postgresql.enable = true;
+    #postgresql.enable = true;
     postgresql.package = pkgs.postgresql;
     redis.enable = true;
 
@@ -163,7 +175,25 @@
     '';
     systemPackages = with pkgs; [
       gnome_terminator
-      #gnome.vte
+      gnome.vte
+#ralink_fw
+gimp
+bwm_ng
+xclip
+pygtk
+pyGtkGlade
+#python33Packages.pygtk
+#python33Packages.pyGtkGlade
+python33
+pygobject
+python27Packages.pip
+python27Packages.virtualenv 
+gnome.gtk
+pycairo
+xsel
+
+python27Packages.psycopg2
+
 
       acpitool
       acpi
@@ -178,8 +208,12 @@
       xfce.xfce4panel
       xfce.terminal
       vlc
-
+imagemagick
       rdesktop
+busybox
+evince
+#gnome.nautilus
+
 
       xlibs.libxcb
       pidgin
@@ -194,10 +228,14 @@
       perlPackages.XMLParser
       glib
       pkgconfig
-
-
+     encfs
+     bind # nslookup, dig 
+xfce.terminal
      eclipses.eclipse_sdk_422
+tree
 
+kde4.ktorrent
+libreoffice
 #      stdenv
 #      fetchurl 
       pkgconfig 
@@ -214,6 +252,14 @@
       nss 
       nspr 
       farsight2
+unetbootin
+libnotify
+dunst
+SDL
+trigger
+glxinfo
+smartmontools
+
 #  libXScrnSaver
       ncurses 
       avahi 
@@ -235,8 +281,10 @@ dbus_libs
       xlibs.libX11
       xlibs.xproto
       xlibs.kbproto
-
+#rt2870fw
+ #rtl8192cfw
       sshfsFuse
+viewnior
 
       openssl
       gmime
@@ -250,12 +298,16 @@ dbus_libs
       superTuxKart
       munin
       iotop
-     
+    gnupg 
      tunctl
      screen
      openconnect
      dhcp
-
+     zip
+     unzip
+kde4.kopete
+kde4.kate
+transmission
        # gitlab
        mysql
        # gitlab end
