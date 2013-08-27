@@ -74,7 +74,11 @@
   # mounted at boot time.  This should include at least the root
   # filesystem.
 
-  fileSystems."/".device = "/dev/disk/by-label/nixos";
+  fileSystems."/" = {
+        device = "/dev/disk/by-label/nixos";
+        fsType = "ext4";      # the type of the partition
+         options = "defaults,discard,noatime,nodiratime,errors=remount-ro";
+  };
 
   # fileSystems."/data" =     # where you want to mount the device
   #   { device = "/dev/sdb";  # the device
