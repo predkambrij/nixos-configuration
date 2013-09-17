@@ -5,14 +5,48 @@
 { config, pkgs, ... }:
 
 {
-#  nixpkgs.config = {
-#    packageOverrides = pkgs: {
-#        nixos.pkgs.gnome.vte = pkgs.callPackage /home/lojze/nixos/nixpkgs/pkgs/desktops/gnome-2/desktop/vte/default.nix {};
-#        #pkgs.gnome.vte = pkgs.callPackage /home/lojze/nixos/nixpkgs/pkgs/desktops/gnome-2/desktop/vte/default.nix {};
-#        nixos.pkgs.xfce.terminal = pkgs.callPackage /home/lojze/nixdev/nixdev/nixpkgs/pkgs/desktops/xfce/applications/terminal.nix {};
-#      
-#      };
-#  };
+  nixpkgs.config = {
+    packageOverrides = pkgs: {
+        #nixos.pkgs.gnome.vte = pkgs.callPackage /home/lojze/nixos/nixpkgs/pkgs/desktops/gnome-2/desktop/vte/default.nix {};
+        #pkgs.gnome.vte = pkgs.callPackage /home/lojze/nixos/nixpkgs/pkgs/desktops/gnome-2/desktop/vte/default.nix {};
+        #nixos.pkgs.xfce.terminal = pkgs.callPackage /home/lojze/nixdev/nixdev/nixpkgs/pkgs/desktops/xfce/applications/terminal.nix {};
+#    inherit (pkgs) buildPerlPackage;
+
+      
+myDBDmysql = pkgs.callPackage /home/lojze/.nixpkgs/myDBDmysql.nix {
+
+
+
+#    inherit (pkgs) fetchurl buildPerlPackage DBI;
+#    inherit (pkgs) mysql;
+
+                                       inherit (pkgs) fetchurl;
+                                       inherit (pkgs) buildPerlPackage;
+                                       #inherit (pkgs) DBI;
+                                       #inherit DBI;
+
+    DBI = pkgs.buildPerlPackage {
+      name = "DBI-1.625";
+      src = pkgs.fetchurl {
+        url = mirror://cpan/authors/id/T/TI/TIMB/DBI-1.625.tar.gz;
+        sha256 = "1rl1bnirf1hshc0z04vk41qplx2ixzciabvwy50a1sld7vs46q4w";
+      };
+      meta = {
+        homepage = http://dbi.perl.org/;
+        description = "Database independent interface for Perl";
+        license = "perl5";
+      };
+    };
+
+
+                                       inherit (pkgs) mysql;
+                                       };
+
+
+      }; # overrides
+  }; # config 
+
+
 #  nixpkgs.config = {
 #    packageOverrides = pkgs: with pkgs; {
 #        gnome.vte = pkgs.callPackage /home/lojze/nixos/nixpkgs/pkgs/desktops/gnome-2/desktop/vte/default.nix {};
@@ -105,6 +139,7 @@
   services = {
    
     #postgresql.enable = true;
+    mysql.enable = true;
     postgresql.package = pkgs.postgresql;
     redis.enable = true;
 
@@ -177,6 +212,8 @@
 #. /home/lojze/nixdev/nixdev/nixrc
 
     '';
+
+
     systemPackages = with pkgs; [
       gnome_terminator
       gnome.vte
@@ -196,8 +233,35 @@ gnome.gtk
 pycairo
 xsel
 
+unrar
+kde4.okular
+
+
+samba
+
 python27Packages.psycopg2
 
+
+perlPackages.DBI
+#perlPackages.DBDmysql
+
+#here
+myDBDmysql
+#music
+ffmpeg
+kde4.amarok
+
+dbus_python
+python27Packages.mutagen
+gst_python
+
+
+cups
+wine
+
+python27Packages.reportlab
+python27Packages.sqlite3
+      mysql55
 
       acpitool
       acpi
@@ -421,7 +485,7 @@ transmission
 #
 #      # browsers
       chromiumWrapper # browser
-      firefoxWrapper # best browser
+      firefoxWrapper # browser
 ##      opera # browser
 #
 #      # apps
@@ -466,5 +530,12 @@ transmission
 
     ];
   };
+nixpkgs.config.firefox = {
+          jrePlugin = true;
+          jre = true;
+          jrsfeePlugin = true;
+          enableGoogleTalkPlugin = true;
+
+      };
 
 }

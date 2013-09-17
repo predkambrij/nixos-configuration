@@ -80,13 +80,37 @@
         screen
         subversion
         subversionClient
+        busybox
+        vim
+        nano
+        systemd
+        man
+        python27Packages.pip
+        python27Packages.virtualenv
 
-
-
-
+        mysql
+        libzip
+        python27Packages.MySQL_python
 
       ];
       ignoreCollisions = true;
+    };
+   envDesktopEnv = pkgs.buildEnv {
+        #myfirefoxWrapper = pkgs.wrapFirefox { browser = pkgs.firefoxPkgs.firefox; };
+      name = "desktopenv";
+      paths = with pkgs; [
+        stdenv
+#        (firefoxWrapper.override {
+#        #  jre = true;
+#            
+#	}) 
+        jrePlugin
+
+        #firefoxWrapper
+      ];
+      ignoreCollisions = true;
+#pkgs.firefox.jre = true;
+
     };
 
 #    envX = pkgs.buildEnv {
@@ -229,4 +253,5 @@
   pkgs.pulseaudio = {
     jackaudioSupport = true;
   };
+#firefox.jre = true;
 }
