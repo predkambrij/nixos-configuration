@@ -46,6 +46,20 @@ myDBDmysql = pkgs.callPackage /home/lojze/.nixpkgs/myDBDmysql.nix {
       }; # overrides
   }; # config 
 
+powerManagement.enable = true;
+
+systemd.services."my-pre-suspend" =
+    { description = "Pre-Suspend Actions";
+        wantedBy = [ "suspend.target" ];
+        before = [ "systemd-suspend.service" ];
+        script = ''
+                /run/current-system/sw/bin/date > /tmp/MY-PRE-RESUME
+                /home/lojze/root_exec.sh /run/current-system/sw/bin/xscreensaver-command -lock 2>/tmp/lock_err
+            '';
+        
+        serviceConfig.Type = "simple";
+    };
+
 
 #  nixpkgs.config = {
 #    packageOverrides = pkgs: with pkgs; {
@@ -143,7 +157,7 @@ myDBDmysql = pkgs.callPackage /home/lojze/.nixpkgs/myDBDmysql.nix {
     postgresql.package = pkgs.postgresql;
     redis.enable = true;
 
-
+    logind.extraConfig = "HandleLidSwitch=ignore";
  
   # Enable the OpenSSH daemon
     openssh.enable = true;
@@ -156,6 +170,7 @@ myDBDmysql = pkgs.callPackage /home/lojze/.nixpkgs/myDBDmysql.nix {
 
     # Enable the X11 windowing system
     xserver = {
+      displayManager.desktopManagerHandlesLidAndPower = false;
       enable = true;
       layout = "si";
       xkbOptions = "eurosign:e";
@@ -232,7 +247,7 @@ python27Packages.virtualenv
 gnome.gtk
 pycairo
 xsel
-
+gnome.vte
 unrar
 kde4.okular
 
@@ -247,6 +262,15 @@ perlPackages.DBI
 
 #here
 myDBDmysql
+
+perlPackages.ClassISA
+
+teeworlds
+php
+
+
+lshw
+
 #music
 ffmpeg
 kde4.amarok
@@ -301,6 +325,7 @@ evince
 xfce.terminal
      eclipses.eclipse_sdk_422
 tree
+subversion
 
 kde4.ktorrent
 libreoffice
