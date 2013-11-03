@@ -211,9 +211,9 @@ systemd.services."my-pre-suspend" =
 #    text = "ln -fs /tmp/Machine2.pm /nix/store/ixrbh53cvc5q2ys2zr72p19xr1x2v94l-nixos-test-driver/lib/perl5/site_perl/Machine.pm";
 #  };
   hardware.pulseaudio.enable = true;
-
-  environment = {
-    enableBashCompletion = true;
+programs.bash.enableCompletion = true;  
+environment = {
+    #enableBashCompletion = true;
     interactiveShellInit = ''
 #        export PATH=$HOME/bin:$HOME/node_modules/bin:$PATH:$HOME/bin/launch
 #        export EDITOR="vim"
@@ -279,9 +279,22 @@ dbus_python
 python27Packages.mutagen
 gst_python
 
+nmap
 
 cups
 wine
+
+trickle
+tightvnc 
+syslinux 
+pmutils 
+lm_sensors 
+kde4.k3b 
+iptables 
+hddtemp 
+gtkvnc 
+directvnc 
+cdrkit
 
 python27Packages.reportlab
 python27Packages.sqlite3
@@ -510,7 +523,7 @@ transmission
 #
 #      # browsers
       chromiumWrapper # browser
-      firefoxWrapper # browser
+      firefoxWrapper # browser TODO couldn't be built 
 ##      opera # browser
 #
 #      # apps
@@ -556,8 +569,8 @@ transmission
     ];
   };
 nixpkgs.config.firefox = {
-          jrePlugin = true;
-          jre = true;
+          #jrePlugin = true;
+          #jre = true;
           jrsfeePlugin = true;
           enableGoogleTalkPlugin = true;
 
