@@ -104,7 +104,7 @@ systemd.services."my-post-suspend" =
       #filesystem."/".device = "/dev/disk/by-label/nixos";
       # "xfs" "ata_piix"
     ];
-  boot.kernelPackages = pkgs.linuxPackages_3_4 // {
+  boot.kernelPackages = pkgs.linuxPackages_3_10 // {
     virtualbox = pkgs.linuxPackages.virtualbox.override {
 #      enableExtensionPack = true; #should be 3_2 but with 3_4 also works even that is commented out
     };
@@ -269,6 +269,27 @@ gnome.vte
 unrar
 kde4.okular
 
+# xfce win tracking .. user installed 
+tcpdump 
+wine 
+ardour
+calibre 
+xfce.garcon 
+gitAndTools.gitSVN 
+gnupg 
+gparted 
+grub2 
+xlibs.libX11 
+xfce.libxfce4util 
+p7zip 
+parted 
+perlPackages.AlienWxWidgets 
+teamviewer8 
+xfce.xfce4_dev_tools 
+xpdf 
+
+
+###
 
 samba
 
@@ -320,8 +341,8 @@ python27Packages.sqlite3
 
       acpitool
       acpi
-      linuxPackages_3_9.virtualbox
-      linuxPackages_3_9.virtualboxGuestAdditions
+      linuxPackages_3_10.virtualbox
+      linuxPackages_3_10.virtualboxGuestAdditions
       qemu
       kvm
       colordiff
