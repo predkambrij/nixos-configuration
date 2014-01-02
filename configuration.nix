@@ -607,12 +607,12 @@ transmission
 
     ];
   };
-nixpkgs.config.firefox = {
-          #jrePlugin = true;
-          #jre = true;
-          jrsfeePlugin = true;
-          enableGoogleTalkPlugin = true;
-
-      };
+#nixpkgs.config.firefox = {
+#          #jrePlugin = true;
+#          #jre = true;
+#          jrsfeePlugin = true;
+#          enableGoogleTalkPlugin = true;
+#
+#      };
 
 }
