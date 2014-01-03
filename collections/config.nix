@@ -4,7 +4,7 @@
 
 {
 #  st.conf = builtins.readFile ./.st.conf;
-  packageOverrides = pkgs:
+  packageOverrides = pkgs: with pkgs; 
   rec {
 #    envStandard = pkgs.buildEnv {
 #      name = "standard";
@@ -92,6 +92,21 @@
         libzip
         python27Packages.MySQL_python
 
+      ];
+      ignoreCollisions = true;
+    };
+
+   libnoise = callPackage ./libnoise.nix {};
+   cacti = callPackage ./cacti.nix {};
+   envCactiEnv = pkgs.buildEnv {
+      name = "cactienv";
+      paths = with pkgs; [
+        stdenv
+        nano
+        vim
+        wget
+        libnoise
+        cacti
       ];
       ignoreCollisions = true;
     };

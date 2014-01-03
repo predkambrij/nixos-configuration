@@ -284,7 +284,7 @@ xfce.libxfce4util
 p7zip 
 parted 
 perlPackages.AlienWxWidgets 
-teamviewer8 
+#teamviewer8 
 xfce.xfce4_dev_tools 
 xpdf 
 
@@ -354,7 +354,7 @@ python27Packages.sqlite3
       vlc
 imagemagick
       rdesktop
-busybox
+#busybox
 evince
 #gnome.nautilus
 
@@ -562,7 +562,9 @@ transmission
 #
 #      # browsers
       chromiumWrapper # browser
-      firefoxWrapper # browser TODO couldn't be built 
+      #firefoxWrapper # browser TODO couldn't be built
+firefox13Wrapper 
+ 
 ##      opera # browser
 #
 #      # apps
