@@ -4,7 +4,7 @@
 
 {
 #  st.conf = builtins.readFile ./.st.conf;
-  packageOverrides = pkgs: with pkgs; 
+  packageOverrides = pkgs: #with pkgs; 
   rec {
 #    envStandard = pkgs.buildEnv {
 #      name = "standard";
@@ -96,8 +96,8 @@
       ignoreCollisions = true;
     };
 
-   libnoise = callPackage ./libnoise.nix {};
-   cacti = callPackage ./cacti.nix {};
+   libnoise = pkgs.callPackage ./libnoise.nix {};
+   cacti = pkgs.callPackage ./cacti.nix {};
    envCactiEnv = pkgs.buildEnv {
       name = "cactienv";
       paths = with pkgs; [
