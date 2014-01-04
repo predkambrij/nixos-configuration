@@ -98,6 +98,7 @@
 
    libnoise = pkgs.callPackage ./libnoise.nix {};
    cacti = pkgs.callPackage ./cacti.nix {};
+   spine = pkgs.callPackage ./spine.nix {};
    envCactiEnv = pkgs.buildEnv {
       name = "cactienv";
       paths = with pkgs; [
@@ -107,6 +108,8 @@
         wget
         libnoise
         cacti
+        spine
+#        unzip libtool file 
       ];
       ignoreCollisions = true;
     };
