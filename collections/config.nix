@@ -99,6 +99,7 @@
    libnoise = pkgs.callPackage ./libnoise.nix {};
    cacti = pkgs.callPackage ./cacti.nix {};
    spine = pkgs.callPackage ./spine.nix {};
+   mysql_c = pkgs.callPackage ./mysql_c.nix {};
    envCactiEnv = pkgs.buildEnv {
       name = "cactienv";
       paths = with pkgs; [
@@ -108,6 +109,7 @@
         wget
         libnoise
         cacti
+        mysql_c
         spine
 #        unzip libtool file 
       ];
