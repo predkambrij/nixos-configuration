@@ -100,9 +100,14 @@
    cacti = pkgs.callPackage ./cacti.nix {};
    spine = pkgs.callPackage ./spine.nix {};
    mysql_c = pkgs.callPackage ./mysql_c.nix {};
+   supertux2 = pkgs.callPackage ./supertux2.nix {};
+   search_paths = pkgs.callPackage ./search_paths.nix {};
+   patchelf_git = pkgs.callPackage ./patchelf.nix {};
+
    envCactiEnv = pkgs.buildEnv {
       name = "cactienv";
       paths = with pkgs; [
+        patchelf
         stdenv
         nano
         vim
@@ -112,6 +117,38 @@
         mysql_c
         spine
 #        unzip libtool file 
+
+#patchelf_git 
+
+# supertux2 
+search_paths
+supertux2 
+
+SDL SDL_image SDL_mixer curl gettext libogg libvorbis mesa openal 
+cmake
+
+SDL 
+SDL2 
+SDL2_gfx   
+SDL2_image
+SDL2_mixer
+sdlmame 
+SDL_gfx
+SDL_image
+SDL_mixer
+SDL_net
+SDL_sound
+SDL_ttf 
+
+boost 
+boostHeaders 
+
+autoconf
+autoreconfHook
+perlPackages.ConfigAutoConf 
+
+
+less
       ];
       ignoreCollisions = true;
     };
