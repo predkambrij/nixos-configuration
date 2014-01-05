@@ -123,7 +123,9 @@ systemd.services."my-post-suspend" =
 
 
   #networking.wireless.enable = true;  # Enables Wireless.
-  networking.networkmanager.enable = true;  # Enables Wireless.
+  #networking.networkmanager.enable = true;  # Enables Wireless.
+  networking.networkmanager.enable = false;  # Enables Wireless.
+  networking.connman.enable = true;  # Enables Wireless.
 
   #networking.interfaces.wlp2s0 = { ipAddress = "192.168.2.33"; prefixLength = 24; };
   #networking.interfaces.enp1s0 = { ipAddress = "192.168.1.247"; prefixLength = 24; };
@@ -248,6 +250,8 @@ environment = {
 
 
     systemPackages = with pkgs; [
+connman
+connmanui
       gnome_terminator
       gnome.vte
 #ralink_fw
