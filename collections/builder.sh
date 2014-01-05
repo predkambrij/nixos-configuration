@@ -17,17 +17,17 @@ mkdir $(pwd)/snmp
 SNMP_INST_DIR=$(pwd)/snmp
 MYSQL_CONNECTOR_DIR=$(pwd)/mysql-connector-c-6.1.3-linux-glibc2.5-x86_64
 PATCH_FILE=$(pwd)/fix.patch
-
-# build net-snmp
-cd net-snmp*
-#exit 1
-
-./configure --prefix=$SNMP_INST_DIR --with-default-snmp-version=2 --with-defaults  
-make 
-#patch perl/Makefile $PATCH_FILE # TODO do proper fix 
-make install
-cd ..
-
+#
+## build net-snmp
+#cd net-snmp*
+##exit 1
+#
+#./configure --prefix=$SNMP_INST_DIR --with-default-snmp-version=2 --with-defaults  
+#make 
+##patch perl/Makefile $PATCH_FILE # TODO do proper fix 
+#make install
+#cd ..
+#
 # spine
 #cd cacti-spine-0.8.8b 
 
@@ -45,12 +45,16 @@ cd ..
 
 #./configure --prefix=$out  --with-mysql=../mysql-connector*/ --with-snmp=$SNMP_INST_DIR
 
-cd cacti-spine*
-./configure --prefix=$out  --with-mysql=$MYSQL_CONNECTOR_DIR --with-snmp=$SNMP_INST_DIR
-make
-make install
- 
+#cd cacti-spine*
+#echo "./configure --prefix=$out  --with-mysql=$MYSQL_CONNECTOR_DIR" 
+#./configure --prefix=$out  --with-mysql=$MYSQL_CONNECTOR_DIR 
+# #--with-snmp=$SNMP_INST_DIR
+#make
+#make install
 
+env
+ 
+false
 
 ##source $stdenv/setup
 ##
