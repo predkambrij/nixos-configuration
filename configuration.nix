@@ -200,7 +200,40 @@ systemd.services."my-post-suspend" =
       displayManager.lightdm.enable = true;
       desktopManager.xfce.enable = true;
       desktopManager.default = "xfce";
-    };
+  };
+  postfix = {
+    destination = [ "localhost"  ];
+    enable = true;
+    extraConfig = ''
+                  #relayhost = [smtp.gmail.com]:587
+                  #smtp_connection_cache_destinations = smtp.gmail.com
+                  relay_destination_concurrency_limit = 1
+                  default_destination_concurrency_limit = 5
+                  smtp_sasl_auth_enable=yes
+                  smtp_sasl_password_maps = hash:/var/postfix/sasl_passwd
+                  smtp_use_tls = yes
+                  smtp_sasl_security_options = noanonymous
+                  smtp_sasl_tls_security_options = noanonymous
+                  smtp_tls_note_starttls_offer = yes
+                  tls_random_source = dev:/dev/urandom
+                  smtp_tls_scert_verifydepth = 5
+                  smtp_tls_enforce_peername = no
+                  smtpd_tls_req_ccert =no
+                  smtpd_tls_ask_ccert = yes
+                  soft_bounce = yes
+                  inet_interfaces = 127.0.0.1
+                  smtpd_tls_key_file = /var/postfix/postfix_cert/ssl-cert.key
+                  smtpd_tls_cert_file = /var/postfix/postfix_cert/ssl-cert.crt # pem
+                  smtpd_tls_CAfile = /var/postfix/postfix_cert/cacert.pem
+
+
+    '';
+    ##hostname = "eve.chaoflow.net";
+    ##origin = "eve.chaoflow.net";
+    ##postmasterAlias = "root";
+    ##rootAlias = "cfl";
+  };
+
   };
   users.extraUsers = {
     lojze = {
