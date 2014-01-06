@@ -233,12 +233,15 @@ systemd.services."my-post-suspend" =
     ##postmasterAlias = "root";
     ##rootAlias = "cfl";
   };
-
+  cron.systemCronJobs = [ 
+    "7 */5 * * *  lojze   bash /home/lojze/newhacks/nixos-configuration/bin/new_revision.sh >/dev/null 2>&1"
+    #"* * * * *  lojze   bash /home/lojze/newhacks/nixos-configuration/bin/new_revision.sh >>/tmp/cron_out 2>&1"
+  ];
   };
   users.extraUsers = {
     lojze = {
         createHome = true;
-        extraGroups = [ "wheel" "networkmanager" "vboxusers"  ];
+        extraGroups = [ "wheel" "networkmanager" "vboxusers" "postdrop" ];
         group = "users";
         home = "/home/lojze";
         shell = "/run/current-system/sw/bin/bash";
