@@ -6,6 +6,121 @@
 #  st.conf = builtins.readFile ./.st.conf;
   packageOverrides = pkgs: #with pkgs; 
   rec {
+   libnoise = pkgs.callPackage ./libnoise.nix {};
+   cacti = pkgs.callPackage ./cacti.nix {};
+   spine = pkgs.callPackage ./spine.nix {};
+   mysql_c = pkgs.callPackage ./mysql_c.nix {};
+   supertux2 = pkgs.callPackage ./supertux2.nix {};
+   search_paths = pkgs.callPackage ./search_paths.nix {};
+   patchelf_git = pkgs.callPackage ./patchelf.nix {};
+
+   envCactiEnv = pkgs.buildEnv {
+      name = "cactienv";
+      paths = with pkgs; [
+        patchelf
+        stdenv
+        nano
+        vim
+        wget
+        libnoise
+        cacti
+        mysql_c
+        spine
+#        unzip libtool file 
+
+        patchelf_git 
+        
+        # supertux2 
+        search_paths
+        supertux2 
+        
+        SDL SDL_image SDL_mixer curl gettext libogg libvorbis mesa openal 
+        cmake
+        
+        SDL 
+        SDL2 
+        SDL2_gfx   
+        SDL2_image
+        SDL2_mixer
+        sdlmame 
+        SDL_gfx
+        SDL_image
+        SDL_mixer
+        SDL_net
+        SDL_sound
+        SDL_ttf 
+        
+        boost 
+        boostHeaders 
+        
+        autoconf
+        autoreconfHook
+        perlPackages.ConfigAutoConf 
+        
+        
+        less
+      ];
+      ignoreCollisions = true;
+    };
+   envGitlab = pkgs.buildEnv {
+      name = "gitlab";
+      paths = with pkgs; [
+        ruby18
+        stdenv
+        git  
+        rubyLibs.bundler 
+        #python27
+        #openssh  
+          
+          
+      ];
+      ignoreCollisions = true;
+    };
+   envProg2Env = pkgs.buildEnv {
+      name = "prog2env";
+      paths = with pkgs; [
+        stdenv
+        git  
+        python27
+        mongodb 
+        eclipses.eclipse_sdk_422
+        screen
+        subversion
+        subversionClient
+        busybox
+        vim
+        nano
+        systemd
+        man
+        python27Packages.pip
+        python27Packages.virtualenv
+
+        mysql
+        libzip
+        python27Packages.MySQL_python
+
+      ];
+      ignoreCollisions = true;
+    };
+
+
+   envDesktopEnv = pkgs.buildEnv {
+        #myfirefoxWrapper = pkgs.wrapFirefox { browser = pkgs.firefoxPkgs.firefox; };
+      name = "desktopenv";
+      paths = with pkgs; [
+        stdenv
+#        (firefoxWrapper.override {
+#        #  jre = true;
+#            
+#	}) 
+        jrePlugin
+
+        #firefoxWrapper
+      ];
+      ignoreCollisions = true;
+#pkgs.firefox.jre = true;
+
+    };
 #    envStandard = pkgs.buildEnv {
 #      name = "standard";
 #      paths = with pkgs; [
@@ -55,120 +170,6 @@
 #      ];
 #      ignoreCollisions = true;
 #    };
-   envGitlab = pkgs.buildEnv {
-      name = "gitlab";
-      paths = with pkgs; [
-        ruby18
-        stdenv
-        git  
-        rubyLibs.bundler 
-        #python27
-        #openssh  
-          
-          
-      ];
-      ignoreCollisions = true;
-    };
-   envProg2Env = pkgs.buildEnv {
-      name = "prog2env";
-      paths = with pkgs; [
-        stdenv
-        git  
-        python27
-        mongodb 
-        eclipses.eclipse_sdk_422
-        screen
-        subversion
-        subversionClient
-        busybox
-        vim
-        nano
-        systemd
-        man
-        python27Packages.pip
-        python27Packages.virtualenv
-
-        mysql
-        libzip
-        python27Packages.MySQL_python
-
-      ];
-      ignoreCollisions = true;
-    };
-
-   libnoise = pkgs.callPackage ./libnoise.nix {};
-   cacti = pkgs.callPackage ./cacti.nix {};
-   spine = pkgs.callPackage ./spine.nix {};
-   mysql_c = pkgs.callPackage ./mysql_c.nix {};
-   supertux2 = pkgs.callPackage ./supertux2.nix {};
-   search_paths = pkgs.callPackage ./search_paths.nix {};
-   patchelf_git = pkgs.callPackage ./patchelf.nix {};
-
-   envCactiEnv = pkgs.buildEnv {
-      name = "cactienv";
-      paths = with pkgs; [
-        patchelf
-        stdenv
-        nano
-        vim
-        wget
-        libnoise
-        cacti
-        mysql_c
-        spine
-#        unzip libtool file 
-
-#patchelf_git 
-
-# supertux2 
-search_paths
-supertux2 
-
-SDL SDL_image SDL_mixer curl gettext libogg libvorbis mesa openal 
-cmake
-
-SDL 
-SDL2 
-SDL2_gfx   
-SDL2_image
-SDL2_mixer
-sdlmame 
-SDL_gfx
-SDL_image
-SDL_mixer
-SDL_net
-SDL_sound
-SDL_ttf 
-
-boost 
-boostHeaders 
-
-autoconf
-autoreconfHook
-perlPackages.ConfigAutoConf 
-
-
-less
-      ];
-      ignoreCollisions = true;
-    };
-   envDesktopEnv = pkgs.buildEnv {
-        #myfirefoxWrapper = pkgs.wrapFirefox { browser = pkgs.firefoxPkgs.firefox; };
-      name = "desktopenv";
-      paths = with pkgs; [
-        stdenv
-#        (firefoxWrapper.override {
-#        #  jre = true;
-#            
-#	}) 
-        jrePlugin
-
-        #firefoxWrapper
-      ];
-      ignoreCollisions = true;
-#pkgs.firefox.jre = true;
-
-    };
 
 #    envX = pkgs.buildEnv {
 #      name = "envX";
