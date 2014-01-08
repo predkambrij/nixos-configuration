@@ -147,7 +147,11 @@ systemd.services."my-post-suspend" =
         fsType = "ext4";      # the type of the partition
          options = "defaults,discard,noatime,nodiratime,errors=remount-ro";
   };
-
+  fileSystems."/tmp" = {
+      device = "tmpfs";
+      fsType = "tmpfs";
+      options = "nosuid,nodev,relatime,size=10G";
+  };
   # fileSystems."/data" =     # where you want to mount the device
   #   { device = "/dev/sdb";  # the device
   #     fsType = "ext3";      # the type of the partition
@@ -288,6 +292,20 @@ environment = {
     systemPackages = with pkgs; [
 connman
 connmanui
+mp3gain
+
+autoconf
+cmake 
+autoreconfHook
+iftop
+mailutils
+msmtp
+patchelf
+php53
+postfix
+vnstat
+
+
       gnome_terminator
       gnome.vte
 #ralink_fw
