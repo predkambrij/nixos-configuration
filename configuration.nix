@@ -288,11 +288,13 @@ environment = {
 
     '';
 
-
     systemPackages = with pkgs; [
 connman
 connmanui
 mp3gain
+fuse
+
+pidginotr # temporary solution: ln -s /run/current-system/sw/lib/pidgin ~/.purple/plugins 
 
 autoconf
 cmake 
@@ -301,10 +303,12 @@ iftop
 mailutils
 msmtp
 patchelf
-php53
+#php53
+php
 postfix
 vnstat
 
+parallel
 
       gnome_terminator
       gnome.vte
@@ -363,7 +367,6 @@ myDBDmysql
 perlPackages.ClassISA
 
 teeworlds
-php
 
 
 lshw
