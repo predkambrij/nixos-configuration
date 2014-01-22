@@ -1,14 +1,14 @@
 
 # installing
-# nix-env -p $NIX_USER_PROFILE_DIR/cacti -i cactienv
+# nix-env -p $NIX_USER_PROFILE_DIR/empty -i emptyenv
 
 # updating
 # nix-env -p $nixprofile -u --always '*'
-# or NIX_USER_PROFILE_DIR=/nix/var/nix/profiles/per-user/lojze;env_name=cacti;nixprofile=$NIX_USER_PROFILE_DIR/$env_name;nix-env -p $nixprofile -u --always '*'
+# or NIX_USER_PROFILE_DIR=/nix/var/nix/profiles/per-user/lojze;env_name=empty;nixprofile=$NIX_USER_PROFILE_DIR/$env_name;nix-env -p $nixprofile -u --always '*'
 
 # see tutorial here (thanks flo for sharing) https://github.com/chaoflow/nixos-configurations  
 
-env_name=cacti
+env_name=empty
 NIX_USER_PROFILE_DIR=/nix/var/nix/profiles/per-user/lojze
 
 nixprofile=$NIX_USER_PROFILE_DIR/$env_name

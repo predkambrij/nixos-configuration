@@ -10,9 +10,10 @@
    cacti = pkgs.callPackage ./cacti.nix {};
    spine = pkgs.callPackage ./spine.nix {};
    mysql_c = pkgs.callPackage ./mysql_c.nix {};
-   supertux2 = pkgs.callPackage ./supertux2.nix {};
+   #supertux2 = pkgs.callPackage ./supertux2.nix {};
    search_paths = pkgs.callPackage ./search_paths.nix {};
    patchelf_git = pkgs.callPackage ./patchelf.nix {};
+   pidginotr = pkgs.callPackage ./pidginotr.nix {};
 
    envCactiEnv = pkgs.buildEnv {
       name = "cactienv";
@@ -27,12 +28,12 @@
         mysql_c
         spine
 #        unzip libtool file 
-
-        patchelf_git 
+        pidginotr
+#        patchelf_git 
         
         # supertux2 
         search_paths
-        supertux2 
+#        supertux2 
         
         SDL SDL_image SDL_mixer curl gettext libogg libvorbis mesa openal 
         cmake
@@ -62,6 +63,13 @@
       ];
       ignoreCollisions = true;
     };
+   envEmptyEnv = pkgs.buildEnv {
+     name = "emptyenv";
+     paths = with pkgs; [
+       stdenv
+     ];
+     ignoreCollisions = true;
+   };
    envGitlab = pkgs.buildEnv {
       name = "gitlab";
       paths = with pkgs; [
