@@ -214,6 +214,7 @@ loglevel	5
 logfile	/var/log/rsnapshot_lojze_home.log
 
 exclude	/home/lojze/newhacks/torrents/
+exclude	/home/lojze/newhacks/muska/
 
 backup	/home/lojze/.bash_history	localhost/
 backup	/home/lojze/.bashrc	localhost/
@@ -228,7 +229,7 @@ backup	/etc/	localhost/
 backup	/home/lojze/newhacks/	localhost/
 
 cmd_preexec	/home/lojze/newhacks/check_mounted.sh
-cmd_postexec	/run/current-system/sw/bin/sync
+cmd_postexec	/run/current-system/sw/bin/bash -c "rsync -ahH --numeric-ids --delete /home/lojze/newhacks/muska/ /home/lojze/rsnapshot_root_muska/ && touch /home/lojze/rsnapshot_root_muska/; sync" 
                       '';
     };
     # Enable the X11 windowing system
