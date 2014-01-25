@@ -43,7 +43,10 @@ myDBDmysql = pkgs.callPackage /home/lojze/.nixpkgs/myDBDmysql.nix {
                                        };
 
 
+#my_rsnapshot = pkgs.rsnapshot.override{ configFile="/etc/rsnap.cnf";  };
       }; # overrides
+
+
   }; # config 
 
 powerManagement.enable = true;
@@ -175,7 +178,7 @@ systemd.services."my-post-suspend" =
 
   # List services that you want to enable:
   services = {
-   
+  
     #postgresql.enable = true;
     mysql.enable = true;
     postgresql.package = pkgs.postgresql;
@@ -192,6 +195,42 @@ systemd.services."my-post-suspend" =
 
     #sudo.enable = true;
 
+    rsnapshot = {
+        enable = true;
+        cronIntervals = { 
+            "daily" = "0 18 * * *"; # every day at 18 o'clock 
+            "weekly" = "0 19 * * 1"; # every monday at 19 o'clock 
+        };
+
+        # tab separated
+        extraConfig = ''
+snapshot_root	/home/lojze/rsnapshot_root/
+
+retain	daily	7
+retain	weekly	4
+
+verbose	5
+loglevel	5
+logfile	/var/log/rsnapshot_lojze_home.log
+
+exclude	/home/lojze/newhacks/torrents/
+
+backup	/home/lojze/.bash_history	localhost/
+backup	/home/lojze/.bashrc	localhost/
+backup	/home/lojze/.gitconfig	localhost/
+backup	/home/lojze/.gnupg	localhost/
+backup	/home/lojze/.pki	localhost/
+backup	/home/lojze/.nixpkgs	localhost/
+
+backup	/home/lojze/.ssh	localhost/
+
+backup	/etc/	localhost/
+backup	/home/lojze/newhacks/	localhost/
+
+cmd_preexec	/home/lojze/newhacks/check_mounted.sh
+cmd_postexec	/run/current-system/sw/bin/sync
+                      '';
+    };
     # Enable the X11 windowing system
     xserver = {
       displayManager.desktopManagerHandlesLidAndPower = false;
@@ -239,6 +278,7 @@ systemd.services."my-post-suspend" =
   };
   cron.systemCronJobs = [ 
     "7 */5 * * *  lojze   bash /home/lojze/newhacks/nixos-configuration/bin/new_revision.sh >/dev/null 2>&1"
+    "@reboot root encfs --public --extpass=/home/lojze/newhacks/encfsprog.sh /home/lojze/.rsnapshot_root/ /home/lojze/rsnapshot_root"
     #"* * * * *  lojze   bash /home/lojze/newhacks/nixos-configuration/bin/new_revision.sh >>/tmp/cron_out 2>&1"
   ];
   };
@@ -250,20 +290,6 @@ systemd.services."my-post-suspend" =
         home = "/home/lojze";
         shell = "/run/current-system/sw/bin/bash";
        };
-    gitlabuser = {
-        createHome = true;
-        extraGroups = [ "gitlabuser" ];
-        group = "users";
-        home = "/home/gitlab";
-        shell = "/run/current-system/sw/bin/bash";
-       };
-    envuser = {
-        createHome = true;
-        #extraGroups = [ "envuser" ];
-        group = "users";
-        home = "/home/envuser";
-        shell = "/run/current-system/sw/bin/bash";
-       };
   };
 
 #  system.activationScripts.somefix = {
@@ -272,6 +298,8 @@ systemd.services."my-post-suspend" =
 #  };
   hardware.pulseaudio.enable = true;
 programs.bash.enableCompletion = true;  
+
+
 environment = {
     #enableBashCompletion = true;
     interactiveShellInit = ''
@@ -287,12 +315,13 @@ environment = {
 #. /home/lojze/nixdev/nixdev/nixrc
 
     '';
-
     systemPackages = with pkgs; [
 connman
 connmanui
 mp3gain
 fuse
+#my_rsnapshot
+rsnapshot
 
 pidginotr # temporary solution: ln -s /run/current-system/sw/lib/pidgin ~/.purple/plugins 
 
