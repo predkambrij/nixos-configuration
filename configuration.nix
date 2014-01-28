@@ -99,7 +99,7 @@ systemd.services."my-post-suspend" =
 <nixos/modules/programs/virtualbox.nix>
       ./hardware-configuration.nix
     ];
-
+  boot.blacklistedKernelModules = [ "mei_me" ];
   boot.kernelModules = [ "tun" "fuse" ];
 
   boot.initrd.kernelModules =
@@ -215,6 +215,7 @@ logfile	/var/log/rsnapshot_lojze_home.log
 
 exclude	/home/lojze/newhacks/torrents/
 exclude	/home/lojze/newhacks/muska/
+exclude	/home/lojze/newhacks/not_in_bu/
 
 backup	/home/lojze/.bash_history	localhost/
 backup	/home/lojze/.bashrc	localhost/
