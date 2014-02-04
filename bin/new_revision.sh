@@ -8,7 +8,7 @@ old_rev_loc="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/old_revision"
 cd $cur_dir # go back where we started 
 old_rev=$(cat $old_rev_loc)
 
-if [ "$rev" != "$old_rev" ]; then 
+if [ "$rev" != "$old_rev" ] && [ "$rev" != "" ]; then 
     message="$(date) current rev: $rev old rev: $old_rev"  
     echo "$rev" > "$old_rev_loc" 
     message="$message"$'\nsaved new state' 
