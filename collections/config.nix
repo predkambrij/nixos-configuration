@@ -9,6 +9,7 @@
    libnoise = pkgs.callPackage ./libnoise.nix {};
    cacti = pkgs.callPackage ./cacti.nix {};
    spine = pkgs.callPackage ./spine.nix {};
+   stress = pkgs.callPackage ./stress.nix {};
    mysql_c = pkgs.callPackage ./mysql_c.nix {};
    #supertux2 = pkgs.callPackage ./supertux2.nix {};
    search_paths = pkgs.callPackage ./search_paths.nix {};
@@ -27,6 +28,7 @@
         cacti
         mysql_c
         spine
+        stress
 #        unzip libtool file 
         pidginotr
 #        patchelf_git 
