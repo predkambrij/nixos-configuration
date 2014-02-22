@@ -250,8 +250,8 @@ cmd_postexec	/run/current-system/sw/bin/bash -c "rsync -ahH --numeric-ids --dele
       xkbOptions = "eurosign:e";
 
       # Enable the KDE Desktop Environment.
-      displayManager.slim.enable = false;
-      displayManager.lightdm.enable = true;
+      #displayManager.slim.enable = false;
+      #displayManager.lightdm.enable = true;
       desktopManager.xfce.enable = true;
       desktopManager.default = "xfce";
   };
@@ -296,6 +296,7 @@ cmd_postexec	/run/current-system/sw/bin/bash -c "rsync -ahH --numeric-ids --dele
   users.extraUsers = {
     lojze = {
         createHome = true;
+        uid = 499;
         extraGroups = [ "wheel" "networkmanager" "vboxusers" "postdrop" ];
         group = "users";
         home = "/home/lojze";
@@ -347,7 +348,7 @@ autoconf
 cmake 
 autoreconfHook
 iftop
-mailutils
+# TODO mailutils
 msmtp
 patchelf
 #php53
@@ -357,7 +358,7 @@ vnstat
 
 parallel
 
-      gnome_terminator
+      #gnome_terminator
       gnome.vte
 #ralink_fw
 gimp
@@ -381,7 +382,7 @@ kde4.okular
 # xfce win tracking .. user installed 
 tcpdump 
 wine 
-ardour
+# TODO ardour
 calibre 
 xfce.garcon 
 gitAndTools.gitSVN 
@@ -675,7 +676,7 @@ transmission
 #      # browsers
       chromiumWrapper # browser
       #firefoxWrapper # browser TODO couldn't be built
-firefox13Wrapper 
+# TODO firefox13Wrapper 
  
 ##      opera # browser
 #
