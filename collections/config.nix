@@ -39,7 +39,12 @@
         
         SDL SDL_image SDL_mixer curl gettext libogg libvorbis mesa openal 
         cmake
-        
+
+# supertux 2
+
+#fetchurl  SDL SDL_image SDL_mixer curl gettext libogg libvorbis mesa openal cmake boost boostHeaders physfs glew
+
+###        
         SDL 
         SDL2 
         SDL2_gfx   

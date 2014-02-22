@@ -108,7 +108,9 @@ systemd.services."my-post-suspend" =
       # "xfs" "ata_piix"
     ];
   boot.kernelPackages = pkgs.linuxPackages_3_10 // {
-    virtualbox = pkgs.linuxPackages.virtualbox.override {
+  #boot.kernelPackages = pkgs.linuxPackages_latest // {
+    #virtualbox = pkgs.linuxPackages_latest.virtualbox.override {
+    virtualbox = pkgs.linuxPackages_3_10.virtualbox.override {
 #      enableExtensionPack = true; #should be 3_2 but with 3_4 also works even that is commented out
     };
   }; 
@@ -213,8 +215,15 @@ verbose	5
 loglevel	5
 logfile	/var/log/rsnapshot_lojze_home.log
 
+exclude	/home/lojze/newhacks/chroot_vmware_view_client_i386/proc/
+exclude	/home/lojze/newhacks/chroot_vmware_view_client_i386/sys/
+exclude	/home/lojze/newhacks/chroot_vmware_view_client_i386/dev/
+exclude	/home/lojze/newhacks/chroot_vmware_view_client_i386/tmp/
+exclude	/home/lojze/newhacks/chroot_vmware_view_client_i386/home/lojze/.pulse
+
 exclude	/home/lojze/newhacks/torrents/
 exclude	/home/lojze/newhacks/muska/
+exclude	/home/lojze/newhacks/fotke/
 exclude	/home/lojze/newhacks/not_in_bu/
 
 backup	/home/lojze/.bash_history	localhost/
@@ -230,7 +239,7 @@ backup	/etc/	localhost/
 backup	/home/lojze/newhacks/	localhost/
 
 cmd_preexec	/home/lojze/newhacks/check_mounted.sh
-cmd_postexec	/run/current-system/sw/bin/bash -c "rsync -ahH --numeric-ids --delete /home/lojze/newhacks/muska/ /home/lojze/rsnapshot_root_muska/ && touch /home/lojze/rsnapshot_root_muska/; sync" 
+cmd_postexec	/run/current-system/sw/bin/bash -c "rsync -ahH --numeric-ids --delete /home/lojze/newhacks/muska/ /home/lojze/rsnapshot_root_muska/ && touch /home/lojze/rsnapshot_root_muska/; rsync -ahH --numeric-ids --delete /home/lojze/newhacks/fotke/ /home/lojze/rsnapshot_root_fotke/ && touch /home/lojze/rsnapshot_root_fotke/; sync" 
                       '';
     };
     # Enable the X11 windowing system
@@ -321,6 +330,13 @@ environment = {
 connman
 connmanui
 mp3gain
+stress
+x11vnc
+
+chromedriver
+wireshark
+texLiveFull
+
 fuse
 #my_rsnapshot
 rsnapshot
@@ -435,6 +451,10 @@ python27Packages.sqlite3
       acpi
       linuxPackages_3_10.virtualbox
       linuxPackages_3_10.virtualboxGuestAdditions
+      #linuxPackages_latest.virtualbox
+      #linuxPackages_latest.virtualboxGuestAdditions
+      #virtualbox
+      #virtualboxGuestAdditions
       qemu
       kvm
       colordiff
