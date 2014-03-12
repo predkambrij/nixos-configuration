@@ -43,6 +43,10 @@ myDBDmysql = pkgs.callPackage /home/lojze/.nixpkgs/myDBDmysql.nix {
                                        };
 
 
+#evince = pkgs.evince.override{ url="mirror://gnome/sources/evince/3.6/evince-3.6.1.tar.xz";  };
+#evince = pkgs.evince.override{ url="mirror://gnome/sources/evince/3.6/evince-3.6.1.tar.xz"; sha256 = "1da1pij030dh8mb0pr0jnyszgsbjnh8lc17rj5ii52j3kmbv51qv";  };
+evince = pkgs.evince.override{ gtk3=pkgs.gtk384;  };
+
 #my_rsnapshot = pkgs.rsnapshot.override{ configFile="/etc/rsnap.cnf";  };
       }; # overrides
 
@@ -100,17 +104,17 @@ systemd.services."my-post-suspend" =
       ./hardware-configuration.nix
     ];
   boot.blacklistedKernelModules = [ "mei_me" ];
-  boot.kernelModules = [ "tun" "fuse" ];
+  boot.kernelModules = [ "tun" "fuse" "tp_smapi" "thinkpad_ec" ];
 
   boot.initrd.kernelModules =
     [ # Specify all kernel modules that are necessary for mounting the root
       #filesystem."/".device = "/dev/disk/by-label/nixos";
       # "xfs" "ata_piix"
     ];
-  boot.kernelPackages = pkgs.linuxPackages_3_10 // {
-  #boot.kernelPackages = pkgs.linuxPackages_latest // {
-    #virtualbox = pkgs.linuxPackages_latest.virtualbox.override {
-    virtualbox = pkgs.linuxPackages_3_10.virtualbox.override {
+  #boot.kernelPackages = pkgs.linuxPackages_3_10 // {
+  boot.kernelPackages = pkgs.linuxPackages_latest // {
+    virtualbox = pkgs.linuxPackages_latest.virtualbox.override {
+    #virtualbox = pkgs.linuxPackages_3_10.virtualbox.override {
 #      enableExtensionPack = true; #should be 3_2 but with 3_4 also works even that is commented out
     };
   }; 
@@ -128,9 +132,9 @@ systemd.services."my-post-suspend" =
 
 
   #networking.wireless.enable = true;  # Enables Wireless.
-  #networking.networkmanager.enable = true;  # Enables Wireless.
-  networking.networkmanager.enable = false;  # Enables Wireless.
-  networking.connman.enable = true;  # Enables Wireless.
+  networking.networkmanager.enable = true;  # Enables Wireless.
+  #networking.networkmanager.enable = false;  # Enables Wireless.
+  #networking.connman.enable = true;  # Enables Wireless.
 
   #networking.interfaces.wlp2s0 = { ipAddress = "192.168.2.33"; prefixLength = 24; };
   #networking.interfaces.enp1s0 = { ipAddress = "192.168.1.247"; prefixLength = 24; };
@@ -182,7 +186,7 @@ systemd.services."my-post-suspend" =
   services = {
   
     #postgresql.enable = true;
-    mysql.enable = true;
+    #mysql.enable = true;
     postgresql.package = pkgs.postgresql;
     redis.enable = true;
 
@@ -333,6 +337,21 @@ connmanui
 mp3gain
 stress
 x11vnc
+psmisc
+opencv
+powertop
+
+#linuxPackages.tp_smapi
+#linuxPackages_3_13.tp_smapi
+linuxPackages_latest.tp_smapi
+linuxPackages_latest.acpi_call
+
+mercurial
+
+saneFrontends
+xsane
+saneBackends
+saneBackendsGit
 
 chromedriver
 wireshark
@@ -355,6 +374,7 @@ patchelf
 php
 postfix
 vnstat
+beep
 
 parallel
 
@@ -369,7 +389,7 @@ pyGtkGlade
 #python33Packages.pygtk
 #python33Packages.pyGtkGlade
 python33
-pygobject
+#pygobject
 python27Packages.pip
 python27Packages.virtualenv 
 gnome.gtk
@@ -397,7 +417,7 @@ perlPackages.AlienWxWidgets
 #teamviewer8 
 xfce.xfce4_dev_tools 
 xpdf 
-
+python27Packages.six
 
 ###
 
@@ -425,7 +445,7 @@ kde4.amarok
 
 dbus_python
 python27Packages.mutagen
-gst_python
+#gst_python
 
 nmap
 
@@ -450,10 +470,10 @@ python27Packages.sqlite3
 
       acpitool
       acpi
-      linuxPackages_3_10.virtualbox
-      linuxPackages_3_10.virtualboxGuestAdditions
-      #linuxPackages_latest.virtualbox
-      #linuxPackages_latest.virtualboxGuestAdditions
+      #linuxPackages_3_10.virtualbox
+      #linuxPackages_3_10.virtualboxGuestAdditions
+      linuxPackages_latest.virtualbox
+      linuxPackages_latest.virtualboxGuestAdditions
       #virtualbox
       #virtualboxGuestAdditions
       qemu
@@ -468,7 +488,18 @@ python27Packages.sqlite3
 imagemagick
       rdesktop
 #busybox
+#evince
+#(pkgs.lib.overrideDerivation pkgs.emacs (attrs: {
+#      name = "emacs-25.0-pre";
+#      src = /path/to/my/emacs/tree;
+#    }))
+#(pkgs.lib.overrideDerivation evince (attrs: {
+#      name = "evince-3.6.1";
+#      url = "mirror://gnome/sources/evince/3.6/evince-3.6.1.tar.xz";
+#    }))
+
 evince
+
 #gnome.nautilus
 
 
@@ -476,7 +507,7 @@ evince
       pidgin
       pidginotr
       libpng
-      gstreamer
+      #gstreamer
 
       xorg_sys_opengl
       gcc
@@ -500,8 +531,8 @@ libreoffice
       gtk 
       gtkspell 
       aspell
-      gstreamer 
-      gst_plugins_base 
+      #gstreamer 
+      #gst_plugins_base 
 ##startupnotification
       gettext
       perl 
@@ -675,8 +706,10 @@ transmission
 #
 #      # browsers
       chromiumWrapper # browser
-      #firefoxWrapper # browser TODO couldn't be built
+      firefoxWrapper # browser TODO couldn't be built
 # TODO firefox13Wrapper 
+torbrowser
+tor
  
 ##      opera # browser
 #

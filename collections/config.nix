@@ -15,12 +15,15 @@
    search_paths = pkgs.callPackage ./search_paths.nix {};
    patchelf_git = pkgs.callPackage ./patchelf.nix {};
    pidginotr = pkgs.callPackage ./pidginotr.nix {};
+   kernel = pkgs.linux_3_13;
+   smapi = pkgs.callPackage ./smapi.nix {};
 
    envCactiEnv = pkgs.buildEnv {
       name = "cactienv";
       paths = with pkgs; [
         patchelf
         stdenv
+        opencv
         nano
         vim
         wget
@@ -32,7 +35,7 @@
 #        unzip libtool file 
         pidginotr
 #        patchelf_git 
-        
+        smapi
         # supertux2 
         search_paths
 #        supertux2 
@@ -70,6 +73,14 @@
       ];
       ignoreCollisions = true;
     };
+   envTestingEnv = pkgs.buildEnv {
+     name = "testingenv";
+     paths = with pkgs; [
+       stdenv
+       firefox
+     ];
+     ignoreCollisions = true;
+   };
    envEmptyEnv = pkgs.buildEnv {
      name = "emptyenv";
      paths = with pkgs; [
