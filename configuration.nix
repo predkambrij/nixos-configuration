@@ -225,6 +225,14 @@ exclude	/home/lojze/newhacks/chroot_vmware_view_client_i386/dev/
 exclude	/home/lojze/newhacks/chroot_vmware_view_client_i386/tmp/
 exclude	/home/lojze/newhacks/chroot_vmware_view_client_i386/home/lojze/.pulse
 
+# $XDG_RUNTIME_DIR
+exclude	/home/lojze/newhacks/chroot_vmware_view_client_i386/run/user/499
+
+# pulseaudio
+exclude	/home/lojze/newhacks/chroot_vmware_view_client_i386/run/udev
+exclude	/home/lojze/newhacks/chroot_vmware_view_client_i386/run/dbus
+
+
 exclude	/home/lojze/newhacks/torrents/
 exclude	/home/lojze/newhacks/muska/
 exclude	/home/lojze/newhacks/fotke/
@@ -375,7 +383,7 @@ php
 postfix
 vnstat
 beep
-
+kismet
 parallel
 
       #gnome_terminator
