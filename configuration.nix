@@ -46,6 +46,7 @@ myDBDmysql = pkgs.callPackage /home/lojze/.nixpkgs/myDBDmysql.nix {
 #evince = pkgs.evince.override{ url="mirror://gnome/sources/evince/3.6/evince-3.6.1.tar.xz";  };
 #evince = pkgs.evince.override{ url="mirror://gnome/sources/evince/3.6/evince-3.6.1.tar.xz"; sha256 = "1da1pij030dh8mb0pr0jnyszgsbjnh8lc17rj5ii52j3kmbv51qv";  };
 evince = pkgs.evince.override{ gtk3=pkgs.gtk384;  };
+#vlc = pkgs.vlc.override{ taglib=pkgs.taglib18;  };
 
 #my_rsnapshot = pkgs.rsnapshot.override{ configFile="/etc/rsnap.cnf";  };
       }; # overrides
@@ -112,8 +113,10 @@ systemd.services."my-post-suspend" =
       # "xfs" "ata_piix"
     ];
   #boot.kernelPackages = pkgs.linuxPackages_3_10 // {
-  boot.kernelPackages = pkgs.linuxPackages_latest // {
-    virtualbox = pkgs.linuxPackages_latest.virtualbox.override {
+  #boot.kernelPackages = pkgs.linuxPackages_latest // {
+  boot.kernelPackages = pkgs.linuxPackages // {
+    virtualbox = pkgs.linuxPackages.virtualbox.override {
+    #virtualbox = pkgs.linuxPackages_latest.virtualbox.override {
     #virtualbox = pkgs.linuxPackages_3_10.virtualbox.override {
 #      enableExtensionPack = true; #should be 3_2 but with 3_4 also works even that is commented out
     };
@@ -128,7 +131,7 @@ systemd.services."my-post-suspend" =
 
   networking.hostName = "nixos-think"; # Define your hostname.
   networking.extraHosts = "54.230.44.9 cache.nixos.org\n54.217.220.47 nixos.org";
-
+  networking.enableIPv6 = false;
 
 
   #networking.wireless.enable = true;  # Enables Wireless.
@@ -232,26 +235,29 @@ exclude	/home/lojze/newhacks/chroot_vmware_view_client_i386/run/user/499
 exclude	/home/lojze/newhacks/chroot_vmware_view_client_i386/run/udev
 exclude	/home/lojze/newhacks/chroot_vmware_view_client_i386/run/dbus
 
-
 exclude	/home/lojze/newhacks/torrents/
 exclude	/home/lojze/newhacks/muska/
 exclude	/home/lojze/newhacks/fotke/
 exclude	/home/lojze/newhacks/not_in_bu/
 
-backup	/home/lojze/.bash_history	localhost/
-backup	/home/lojze/.bashrc	localhost/
-backup	/home/lojze/.gitconfig	localhost/
-backup	/home/lojze/.gnupg	localhost/
-backup	/home/lojze/.pki	localhost/
-backup	/home/lojze/.nixpkgs	localhost/
+exclude	/home/lojze/rsnapshot_hetzner 
+exclude	/home/lojze/rsnapshot_root 
+exclude	/home/lojze/rsnapshot_root_fotke 
+exclude	/home/lojze/rsnapshot_root_muska 
+exclude	/home/lojze/.rsnapshot_root 
+exclude	/home/lojze/.rsnapshot_hetzner 
 
-backup	/home/lojze/.ssh	localhost/
+exclude	/home/lojze/.cache 
+exclude	/home/lojze/Downloads 
+exclude	/home/lojze/VirtualBox\ VMs
 
+exclude	/home/lojze/mp
+
+backup	/home/lojze	localhost/
 backup	/etc/	localhost/
-backup	/home/lojze/newhacks/	localhost/
 
 cmd_preexec	/home/lojze/newhacks/check_mounted.sh
-cmd_postexec	/run/current-system/sw/bin/bash -c "rsync -ahH --numeric-ids --delete /home/lojze/newhacks/muska/ /home/lojze/rsnapshot_root_muska/ && touch /home/lojze/rsnapshot_root_muska/; rsync -ahH --numeric-ids --delete /home/lojze/newhacks/fotke/ /home/lojze/rsnapshot_root_fotke/ && touch /home/lojze/rsnapshot_root_fotke/; sync" 
+cmd_postexec	/run/current-system/sw/bin/bash -c "rsync -ahH --numeric-ids --delete --exclude=/home/lojze/newhacks/muska/sshfs /home/lojze/newhacks/muska/ /home/lojze/rsnapshot_root_muska/ && touch /home/lojze/rsnapshot_root_muska/; rsync -ahH --numeric-ids --delete /home/lojze/newhacks/fotke/ /home/lojze/rsnapshot_root_fotke/ && touch /home/lojze/rsnapshot_root_fotke/; sync" 
                       '';
     };
     # Enable the X11 windowing system
@@ -267,37 +273,41 @@ cmd_postexec	/run/current-system/sw/bin/bash -c "rsync -ahH --numeric-ids --dele
       desktopManager.xfce.enable = true;
       desktopManager.default = "xfce";
   };
+#  postfix = {
+#    destination = [ "localhost"  ];
+#    enable = true;
+#    extraConfig = ''
+#                  #relayhost = [smtp.gmail.com]:587
+#                  #smtp_connection_cache_destinations = smtp.gmail.com
+#                  relay_destination_concurrency_limit = 1
+#                  default_destination_concurrency_limit = 5
+#                  smtp_sasl_auth_enable=yes
+#                  smtp_sasl_password_maps = hash:/var/postfix/sasl_passwd
+#                  smtp_use_tls = yes
+#                  smtp_sasl_security_options = noanonymous
+#                  smtp_sasl_tls_security_options = noanonymous
+#                  smtp_tls_note_starttls_offer = yes
+#                  tls_random_source = dev:/dev/urandom
+#                  smtp_tls_scert_verifydepth = 5
+#                  smtp_tls_enforce_peername = no
+#                  smtpd_tls_req_ccert =no
+#                  smtpd_tls_ask_ccert = yes
+#                  soft_bounce = yes
+#                  inet_interfaces = 127.0.0.1
+#                  smtpd_tls_key_file = /var/postfix/postfix_cert/ssl-cert.key
+#                  smtpd_tls_cert_file = /var/postfix/postfix_cert/ssl-cert.crt # pem
+#                  smtpd_tls_CAfile = /var/postfix/postfix_cert/cacert.pem
+#
+#
+#    '';
+#    ##hostname = "eve.chaoflow.net";
+#    ##origin = "eve.chaoflow.net";
+#    ##postmasterAlias = "root";
+#    ##rootAlias = "cfl";
+#  };
   postfix = {
-    destination = [ "localhost"  ];
     enable = true;
-    extraConfig = ''
-                  #relayhost = [smtp.gmail.com]:587
-                  #smtp_connection_cache_destinations = smtp.gmail.com
-                  relay_destination_concurrency_limit = 1
-                  default_destination_concurrency_limit = 5
-                  smtp_sasl_auth_enable=yes
-                  smtp_sasl_password_maps = hash:/var/postfix/sasl_passwd
-                  smtp_use_tls = yes
-                  smtp_sasl_security_options = noanonymous
-                  smtp_sasl_tls_security_options = noanonymous
-                  smtp_tls_note_starttls_offer = yes
-                  tls_random_source = dev:/dev/urandom
-                  smtp_tls_scert_verifydepth = 5
-                  smtp_tls_enforce_peername = no
-                  smtpd_tls_req_ccert =no
-                  smtpd_tls_ask_ccert = yes
-                  soft_bounce = yes
-                  inet_interfaces = 127.0.0.1
-                  smtpd_tls_key_file = /var/postfix/postfix_cert/ssl-cert.key
-                  smtpd_tls_cert_file = /var/postfix/postfix_cert/ssl-cert.crt # pem
-                  smtpd_tls_CAfile = /var/postfix/postfix_cert/cacert.pem
-
-
-    '';
-    ##hostname = "eve.chaoflow.net";
-    ##origin = "eve.chaoflow.net";
-    ##postmasterAlias = "root";
-    ##rootAlias = "cfl";
+    setSendmail = true;
   };
   cron.systemCronJobs = [ 
     "7 */5 * * *  lojze   bash /home/lojze/newhacks/nixos-configuration/bin/new_revision.sh >/dev/null 2>&1"
@@ -340,6 +350,9 @@ environment = {
 
     '';
     systemPackages = with pkgs; [
+
+#test
+
 connman
 connmanui
 mp3gain
@@ -348,13 +361,29 @@ x11vnc
 psmisc
 opencv
 powertop
+openjdk
+mp4v2
+
+automake114x
+
+
+flashplayer
 
 #linuxPackages.tp_smapi
 #linuxPackages_3_13.tp_smapi
-linuxPackages_latest.tp_smapi
-linuxPackages_latest.acpi_call
+#linuxPackages_latest.tp_smapi
+#linuxPackages_latest.acpi_call
 
+flac
+
+linuxPackages.tp_smapi
+linuxPackages.acpi_call
+
+exif
+e17.terminology
+tmux
 mercurial
+xlibs.xev
 
 saneFrontends
 xsane
@@ -385,6 +414,7 @@ vnstat
 beep
 kismet
 parallel
+streamripper
 
       #gnome_terminator
       gnome.vte
@@ -400,6 +430,11 @@ python33
 #pygobject
 python27Packages.pip
 python27Packages.virtualenv 
+python27Packages.django
+python27Packages.MySQL_python
+
+libtool
+openvpn
 gnome.gtk
 pycairo
 xsel
@@ -409,7 +444,7 @@ kde4.okular
 
 # xfce win tracking .. user installed 
 tcpdump 
-wine 
+#wine 
 # TODO ardour
 calibre 
 xfce.garcon 
@@ -426,6 +461,8 @@ perlPackages.AlienWxWidgets
 xfce.xfce4_dev_tools 
 xpdf 
 python27Packages.six
+
+id3v2
 
 ###
 
@@ -480,8 +517,10 @@ python27Packages.sqlite3
       acpi
       #linuxPackages_3_10.virtualbox
       #linuxPackages_3_10.virtualboxGuestAdditions
-      linuxPackages_latest.virtualbox
-      linuxPackages_latest.virtualboxGuestAdditions
+      #linuxPackages_latest.virtualbox
+      #linuxPackages_latest.virtualboxGuestAdditions
+      linuxPackages.virtualbox
+      linuxPackages.virtualboxGuestAdditions
       #virtualbox
       #virtualboxGuestAdditions
       qemu
@@ -530,6 +569,8 @@ xfce.terminal
      eclipses.eclipse_sdk_422
 tree
 subversion
+mplayer2
+smplayer
 
 kde4.ktorrent
 libreoffice
