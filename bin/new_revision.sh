@@ -18,6 +18,12 @@ if [ "$rev" != "$old_rev" ] && [ "$rev" != "" ]; then
     mail_message=$'Subject: New unstable release\n'
     mail_message="$mail_message""$message"$'\n'
 
+    cd /home/lojze/newhacks/nnixmy/pkgs/nixpkgs
+    git_change_tree=$(git log --graph --decorate=full  --name-status "$old_rev".."$rev")
+
+    mail_message="$mail_message"$'\n\n'
+    mail_message="$mail_message"$"$git_change_tree\n"
+
     echo 
     echo "Message sent:"
     echo "$mail_message"  
