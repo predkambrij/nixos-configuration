@@ -46,7 +46,7 @@ myDBDmysql = pkgs.callPackage /home/lojze/.nixpkgs/myDBDmysql.nix {
 #evince = pkgs.evince.override{ url="mirror://gnome/sources/evince/3.6/evince-3.6.1.tar.xz";  };
 #evince = pkgs.evince.override{ url="mirror://gnome/sources/evince/3.6/evince-3.6.1.tar.xz"; sha256 = "1da1pij030dh8mb0pr0jnyszgsbjnh8lc17rj5ii52j3kmbv51qv";  };
 evince = pkgs.evince.override{ gtk3=pkgs.gtk384;  };
-#vlc = pkgs.vlc.override{ taglib=pkgs.taglib18;  };
+#vlc = pkgs.vlc.override{ taglib=pkgs.taglib_git;  };
 
 #my_rsnapshot = pkgs.rsnapshot.override{ configFile="/etc/rsnap.cnf";  };
       }; # overrides
