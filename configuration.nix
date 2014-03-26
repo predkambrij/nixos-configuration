@@ -221,20 +221,9 @@ powertop
 openjdk
 mp4v2
 
-automake114x
-
 
 flashplayer
-
-#linuxPackages.tp_smapi
-#linuxPackages_3_13.tp_smapi
-#linuxPackages_latest.tp_smapi
-#linuxPackages_latest.acpi_call
-
 flac
-
-linuxPackages.tp_smapi
-linuxPackages.acpi_call
 
 exif
 e17.terminology
@@ -252,20 +241,12 @@ wireshark
 texLiveFull
 
 fuse
-#my_rsnapshot
 rsnapshot
 
 pidginotr # temporary solution: ln -s /run/current-system/sw/lib/pidgin ~/.purple/plugins 
 
-autoconf
-cmake 
-autoreconfHook
 iftop
-# TODO mailutils
 msmtp
-patchelf
-#php53
-php
 postfix
 vnstat
 beep
@@ -273,24 +254,19 @@ kismet
 parallel
 streamripper
 
-      #gnome_terminator
-      gnome.vte
-#ralink_fw
+#gnome_terminator
+gnome.vte
+
 gimp
 bwm_ng
 xclip
-pygtk
-pyGtkGlade
-#python33Packages.pygtk
-#python33Packages.pyGtkGlade
+php
 python33
-#pygobject
 python27Packages.pip
 python27Packages.virtualenv 
 python27Packages.django
 python27Packages.MySQL_python
 
-libtool
 openvpn
 gnome.gtk
 pycairo
@@ -299,43 +275,16 @@ gnome.vte
 unrar
 kde4.okular
 
-# xfce win tracking .. user installed 
 tcpdump 
-#wine 
-# TODO ardour
 calibre 
-xfce.garcon 
 gitAndTools.gitSVN 
 gnupg 
 gparted 
 grub2 
-xlibs.libX11 
-xfce.libxfce4util 
 p7zip 
 parted 
-perlPackages.AlienWxWidgets 
-#teamviewer8 
-xfce.xfce4_dev_tools 
-xpdf 
-python27Packages.six
-
 id3v2
-
-###
-
 samba
-
-python27Packages.psycopg2
-
-
-perlPackages.DBI
-#perlPackages.DBDmysql
-
-
-perlPackages.ClassISA
-
-teeworlds
-
 
 lshw
 
@@ -344,9 +293,6 @@ ffmpeg
 kde4.amarok
 
 dbus_python
-python27Packages.mutagen
-#gst_python
-
 nmap
 
 cups
@@ -364,7 +310,6 @@ gtkvnc
 directvnc 
 cdrkit
 
-python27Packages.reportlab
 python27Packages.sqlite3
       mysql55
 
@@ -389,107 +334,36 @@ python27Packages.sqlite3
       vlc
 imagemagick
       rdesktop
-#busybox
-#evince
-#(pkgs.lib.overrideDerivation pkgs.emacs (attrs: {
-#      name = "emacs-25.0-pre";
-#      src = /path/to/my/emacs/tree;
-#    }))
-#(pkgs.lib.overrideDerivation evince (attrs: {
-#      name = "evince-3.6.1";
-#      url = "mirror://gnome/sources/evince/3.6/evince-3.6.1.tar.xz";
-#    }))
-
 evince
 
-#gnome.nautilus
-
-
-      xlibs.libxcb
       pidgin
       pidginotr
-      libpng
-      #gstreamer
 
-      xorg_sys_opengl
-      gcc
-      intltool
-      gettext
-      perlPackages.XMLParser
-      glib
-      pkgconfig
      encfs
      bind # nslookup, dig 
-xfce.terminal
+     xfce.terminal
      eclipses.eclipse_sdk_422
-tree
-subversion
-mplayer2
-smplayer
+     tree
+     subversion
+     mplayer2
+     smplayer
 
-kde4.ktorrent
-libreoffice
-#      stdenv
-#      fetchurl 
-      pkgconfig 
-      gtk 
-      gtkspell 
-      aspell
-      #gstreamer 
-      #gst_plugins_base 
-##startupnotification
+     kde4.ktorrent
+     libreoffice
       gettext
-      perl 
-      perlXMLParser 
-      libxml2 
-      nss 
-      nspr 
-      farsight2
 unetbootin
 libnotify
-dunst
-SDL
-trigger
-glxinfo
 smartmontools
 
-#  libXScrnSaver
-      ncurses 
-      avahi 
-      dbus 
-      dbus_glib 
-dbus_libs  
-      intltool 
-      libidn
-#      lib 
       python
-      gnome.gtk
-      gnome.pango
-      gnome.cairo
-      gdb
-      gdk_pixbuf
-      atk
-      freetype
-      x11
-      xlibs.libX11
-      xlibs.xproto
-      xlibs.kbproto
-#rt2870fw
- #rtl8192cfw
       sshfsFuse
 viewnior
 
       openssl
-      gmime
-      pyopenssl
-
-      gnumake
-
       xlibs.xhost
 
       superTux
       superTuxKart
-      munin
       iotop
     gnupg 
      tunctl
@@ -498,7 +372,6 @@ viewnior
      dhcp
      zip
      unzip
-kde4.kopete
 kde4.kate
 transmission
        # gitlab
