@@ -12,22 +12,20 @@ if [ "$rev" != "$old_rev" ] && [ "$rev" != "" ]; then
     message="$(date) current rev: $rev old rev: $old_rev"  
     echo "$rev" > "$old_rev_loc" 
     message="$message"$'\nsaved new state' 
-    echo "$message"
-
     
-    mail_message=$'Subject: New unstable release\n'
-    mail_message="$mail_message""$message"$'\n'
+    subject=$"Subject: New unstable release (old:$old_rev cur:$rev)"$'\n'
 
     cd /home/lojze/newhacks/nnixmy/pkgs/nixpkgs
     git_change_tree=$(git log --graph --decorate=full  --name-status "$old_rev".."$rev")
 
-    mail_message="$mail_message"$'\n\n'
-    mail_message="$mail_message"$"$git_change_tree\n"
+    content="$message\n\n\n"$"$git_change_tree\n"
 
-    echo 
-    echo "Message sent:"
-    echo "$mail_message"  
-    echo "$mail_message" | sendmail lojze.blatnik@gmail.com 
+    send_to="To: lojze.blatnik@gmail.com\n";
+    from="From: Auto Message <automessage@blatnik.org>\n";
+    
+    mail_message=$"$from$send_to$subject""Content-type:text/plain\n\n$content"
+    echo -e "$mail_message"  
+    echo -e "$mail_message" | sendmail -t -r automessage@blatnik.org 
 fi
 
 
