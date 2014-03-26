@@ -311,6 +311,7 @@ cmd_postexec	/run/current-system/sw/bin/bash -c "rsync -ahH --numeric-ids --dele
   };
   cron.systemCronJobs = [ 
     "7 */5 * * *  lojze   bash /home/lojze/newhacks/nixos-configuration/bin/new_revision.sh >/dev/null 2>&1"
+    "7 */5 * * *  lojze   bash /home/lojze/newhacks/nixos-configuration/bin/new_stable_revision.sh >/dev/null 2>&1"
     "@reboot root encfs --public --extpass=/home/lojze/newhacks/encfsprog.sh /home/lojze/.rsnapshot_root/ /home/lojze/rsnapshot_root"
     #"* * * * *  lojze   bash /home/lojze/newhacks/nixos-configuration/bin/new_revision.sh >>/tmp/cron_out 2>&1"
   ];
@@ -352,7 +353,7 @@ environment = {
     systemPackages = with pkgs; [
 
 #test
-
+autossh
 connman
 connmanui
 mp3gain
