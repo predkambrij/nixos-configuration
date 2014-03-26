@@ -208,6 +208,9 @@ cmd_postexec	/run/current-system/sw/bin/bash -c "rsync -ahH --numeric-ids --dele
 environment = {
     systemPackages = with pkgs; [
 
+# == add here new packages ===
+
+##############################
 #test
 autossh
 connman
@@ -238,7 +241,7 @@ saneBackendsGit
 
 chromedriver
 wireshark
-texLiveFull
+#texLiveFull # huge package 
 
 fuse
 rsnapshot
