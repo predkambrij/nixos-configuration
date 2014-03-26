@@ -5,59 +5,16 @@
 { config, pkgs, ... }:
 
 {
-  nixpkgs.config = {
-    packageOverrides = pkgs: {
-        #nixos.pkgs.gnome.vte = pkgs.callPackage /home/lojze/nixos/nixpkgs/pkgs/desktops/gnome-2/desktop/vte/default.nix {};
-        #pkgs.gnome.vte = pkgs.callPackage /home/lojze/nixos/nixpkgs/pkgs/desktops/gnome-2/desktop/vte/default.nix {};
-        #nixos.pkgs.xfce.terminal = pkgs.callPackage /home/lojze/nixdev/nixdev/nixpkgs/pkgs/desktops/xfce/applications/terminal.nix {};
-#    inherit (pkgs) buildPerlPackage;
-
-      
-myDBDmysql = pkgs.callPackage /home/lojze/.nixpkgs/myDBDmysql.nix {
-
-
-
-#    inherit (pkgs) fetchurl buildPerlPackage DBI;
-#    inherit (pkgs) mysql;
-
-                                       inherit (pkgs) fetchurl;
-                                       inherit (pkgs) buildPerlPackage;
-                                       #inherit (pkgs) DBI;
-                                       #inherit DBI;
-
-    DBI = pkgs.buildPerlPackage {
-      name = "DBI-1.625";
-      src = pkgs.fetchurl {
-        url = mirror://cpan/authors/id/T/TI/TIMB/DBI-1.625.tar.gz;
-        sha256 = "1rl1bnirf1hshc0z04vk41qplx2ixzciabvwy50a1sld7vs46q4w";
-      };
-      meta = {
-        homepage = http://dbi.perl.org/;
-        description = "Database independent interface for Perl";
-        license = "perl5";
-      };
-    };
-
-
-                                       inherit (pkgs) mysql;
-                                       };
-
-
-#evince = pkgs.evince.override{ url="mirror://gnome/sources/evince/3.6/evince-3.6.1.tar.xz";  };
-#evince = pkgs.evince.override{ url="mirror://gnome/sources/evince/3.6/evince-3.6.1.tar.xz"; sha256 = "1da1pij030dh8mb0pr0jnyszgsbjnh8lc17rj5ii52j3kmbv51qv";  };
-evince = pkgs.evince.override{ gtk3=pkgs.gtk384;  };
-#vlc = pkgs.vlc.override{ taglib=pkgs.taglib_git;  };
-
-#my_rsnapshot = pkgs.rsnapshot.override{ configFile="/etc/rsnap.cnf";  };
-      }; # overrides
-
-
-  }; # config 
+    nixpkgs.config = {
+        packageOverrides = pkgs: {
+            evince = pkgs.evince.override{ gtk3=pkgs.gtk384;  };
+        }; # overrides
+    }; # config 
 
 powerManagement.enable = true;
 
 systemd.services."my-pre-suspend" =
-    { description = "Pre-Suspend Actions";
+    {   description = "Pre-Suspend Actions";
         wantedBy = [ "suspend.target" ];
         before = [ "systemd-suspend.service" ];
         script = ''
@@ -73,7 +30,7 @@ systemd.services."my-pre-suspend" =
     };
 
 systemd.services."my-post-suspend" =
-    { description = "Post-Suspend Actions";
+    {   description = "Post-Suspend Actions";
         wantedBy = [ "suspend.target" ];
         after = [ "systemd-suspend.service" ];
         script = ''
@@ -86,38 +43,21 @@ systemd.services."my-post-suspend" =
         serviceConfig.Type = "simple";
     };
 
-
-#  nixpkgs.config = {
-#    packageOverrides = pkgs: with pkgs; {
-#        gnome.vte = pkgs.callPackage /home/lojze/nixos/nixpkgs/pkgs/desktops/gnome-2/desktop/vte/default.nix {};
-#        #pkgs.gnome.vte = pkgs.callPackage /home/lojze/nixos/nixpkgs/pkgs/desktops/gnome-2/desktop/vte/default.nix {};
-#        xfce.terminal = pkgs.callPackage /home/lojze/nixdev/nixdev/nixpkgs/pkgs/desktops/xfce/applications/terminal.nix {};
-#      
-#      };
-#  };
-
-
-#  require = [ 
-# ];
   require =
     [ # Include the results of the hardware scan.
 <nixos/modules/programs/virtualbox.nix>
       ./hardware-configuration.nix
     ];
-  boot.blacklistedKernelModules = [ "mei_me" ];
-  boot.kernelModules = [ "tun" "fuse" "tp_smapi" "thinkpad_ec" ];
+  boot.blacklistedKernelModules = [ "mei_me" ]; # 100% cpu load when craches
+  boot.kernelModules = [ "tun" "fuse" ];
 
   boot.initrd.kernelModules =
     [ # Specify all kernel modules that are necessary for mounting the root
       #filesystem."/".device = "/dev/disk/by-label/nixos";
       # "xfs" "ata_piix"
     ];
-  #boot.kernelPackages = pkgs.linuxPackages_3_10 // {
-  #boot.kernelPackages = pkgs.linuxPackages_latest // {
   boot.kernelPackages = pkgs.linuxPackages // {
     virtualbox = pkgs.linuxPackages.virtualbox.override {
-    #virtualbox = pkgs.linuxPackages_latest.virtualbox.override {
-    #virtualbox = pkgs.linuxPackages_3_10.virtualbox.override {
 #      enableExtensionPack = true; #should be 3_2 but with 3_4 also works even that is commented out
     };
   }; 
@@ -130,25 +70,11 @@ systemd.services."my-post-suspend" =
   boot.loader.grub.device = "/dev/sdb";
 
   networking.hostName = "nixos-think"; # Define your hostname.
-  networking.extraHosts = "54.230.44.9 cache.nixos.org\n54.217.220.47 nixos.org";
-  networking.enableIPv6 = false;
+  networking.extraHosts = "54.230.44.9 cache.nixos.org\n54.217.220.47 nixos.org"; # it most likely timed out because of dns
+  networking.enableIPv6 = false; # postfix may doesn't work with ipv6
 
 
-  #networking.wireless.enable = true;  # Enables Wireless.
-  networking.networkmanager.enable = true;  # Enables Wireless.
-  #networking.networkmanager.enable = false;  # Enables Wireless.
-  #networking.connman.enable = true;  # Enables Wireless.
-
-  #networking.interfaces.wlp2s0 = { ipAddress = "192.168.2.33"; prefixLength = 24; };
-  #networking.interfaces.enp1s0 = { ipAddress = "192.168.1.247"; prefixLength = 24; };
-  #networking.defaultGateway = "192.168.1.1";
-  #networking.nameservers = [ "8.8.8.8" ];
-  #networking.enableIPv6 = false;
-
-
-  
-  #networking.wicd.enable = true;
-
+  networking.networkmanager.enable = true; 
 
   # Add filesystem entries for each partition that you want to see
   # mounted at boot time.  This should include at least the root
@@ -164,26 +90,10 @@ systemd.services."my-post-suspend" =
       fsType = "tmpfs";
       options = "nosuid,nodev,relatime,size=10G";
   };
-  # fileSystems."/data" =     # where you want to mount the device
-  #   { device = "/dev/sdb";  # the device
-  #     fsType = "ext3";      # the type of the partition
-  #     options = "data=journal";
-  #   };
 
   # List swap partitions activated at boot time.
   swapDevices =
-    [  { device = "/dev/disk/by-label/swap"; }
-    ];
-
-  # Select internationalisation properties.
-  # i18n = {
-  #   consoleFont = "lat9w-16";
-  #   consoleKeyMap = "us";
-  #   defaultLocale = "en_US.UTF-8";
-  # };
-
-
-
+    [  { device = "/dev/disk/by-label/swap"; } ];
 
   # List services that you want to enable:
   services = {
@@ -267,44 +177,9 @@ cmd_postexec	/run/current-system/sw/bin/bash -c "rsync -ahH --numeric-ids --dele
       layout = "si";
       xkbOptions = "eurosign:e";
 
-      # Enable the KDE Desktop Environment.
-      #displayManager.slim.enable = false;
-      #displayManager.lightdm.enable = true;
       desktopManager.xfce.enable = true;
       desktopManager.default = "xfce";
   };
-#  postfix = {
-#    destination = [ "localhost"  ];
-#    enable = true;
-#    extraConfig = ''
-#                  #relayhost = [smtp.gmail.com]:587
-#                  #smtp_connection_cache_destinations = smtp.gmail.com
-#                  relay_destination_concurrency_limit = 1
-#                  default_destination_concurrency_limit = 5
-#                  smtp_sasl_auth_enable=yes
-#                  smtp_sasl_password_maps = hash:/var/postfix/sasl_passwd
-#                  smtp_use_tls = yes
-#                  smtp_sasl_security_options = noanonymous
-#                  smtp_sasl_tls_security_options = noanonymous
-#                  smtp_tls_note_starttls_offer = yes
-#                  tls_random_source = dev:/dev/urandom
-#                  smtp_tls_scert_verifydepth = 5
-#                  smtp_tls_enforce_peername = no
-#                  smtpd_tls_req_ccert =no
-#                  smtpd_tls_ask_ccert = yes
-#                  soft_bounce = yes
-#                  inet_interfaces = 127.0.0.1
-#                  smtpd_tls_key_file = /var/postfix/postfix_cert/ssl-cert.key
-#                  smtpd_tls_cert_file = /var/postfix/postfix_cert/ssl-cert.crt # pem
-#                  smtpd_tls_CAfile = /var/postfix/postfix_cert/cacert.pem
-#
-#
-#    '';
-#    ##hostname = "eve.chaoflow.net";
-#    ##origin = "eve.chaoflow.net";
-#    ##postmasterAlias = "root";
-#    ##rootAlias = "cfl";
-#  };
   postfix = {
     enable = true;
     setSendmail = true;
@@ -313,7 +188,6 @@ cmd_postexec	/run/current-system/sw/bin/bash -c "rsync -ahH --numeric-ids --dele
     "7 */5 * * *  lojze   bash /home/lojze/newhacks/nixos-configuration/bin/new_revision.sh >/dev/null 2>&1"
     "7 */5 * * *  lojze   bash /home/lojze/newhacks/nixos-configuration/bin/new_stable_revision.sh >/dev/null 2>&1"
     "@reboot root encfs --public --extpass=/home/lojze/newhacks/encfsprog.sh /home/lojze/.rsnapshot_root/ /home/lojze/rsnapshot_root"
-    #"* * * * *  lojze   bash /home/lojze/newhacks/nixos-configuration/bin/new_revision.sh >>/tmp/cron_out 2>&1"
   ];
   };
   users.extraUsers = {
@@ -327,29 +201,11 @@ cmd_postexec	/run/current-system/sw/bin/bash -c "rsync -ahH --numeric-ids --dele
        };
   };
 
-#  system.activationScripts.somefix = {
-#    deps = [ ];
-#    text = "ln -fs /tmp/Machine2.pm /nix/store/ixrbh53cvc5q2ys2zr72p19xr1x2v94l-nixos-test-driver/lib/perl5/site_perl/Machine.pm";
-#  };
   hardware.pulseaudio.enable = true;
-programs.bash.enableCompletion = true;  
+  programs.bash.enableCompletion = true;  
 
 
 environment = {
-    #enableBashCompletion = true;
-    interactiveShellInit = ''
-#        export PATH=$HOME/bin:$HOME/node_modules/bin:$PATH:$HOME/bin/launch
-#        export EDITOR="vim"
-#        export EMAIL=rok@garbas.si
-#        export FULLNAME="Rok Garbas"
-#        export PIP_DOWNLOAD_CACHE=$HOME/.pip_download_cache
-#        export NODE_PATH=$HOME/.node_modules
-
-
-#export NIX_DEV_ROOT=/home/lojze/nixdev/nixdev
-#. /home/lojze/nixdev/nixdev/nixrc
-
-    '';
     systemPackages = with pkgs; [
 
 #test
@@ -475,8 +331,6 @@ python27Packages.psycopg2
 perlPackages.DBI
 #perlPackages.DBDmysql
 
-#here
-myDBDmysql
 
 perlPackages.ClassISA
 
@@ -805,12 +659,4 @@ tor
 
     ];
   };
-#nixpkgs.config.firefox = {
-#          #jrePlugin = true;
-#          #jre = true;
-#          jrsfeePlugin = true;
-#          enableGoogleTalkPlugin = true;
-#
-#      };
-
 }
