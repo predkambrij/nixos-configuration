@@ -3,8 +3,11 @@
 # Florian Friesdorf <flo@chaoflow.net> Alojzij Blatnik <lojze.blatnik@gmail.com>
 
 {
+config.allowUnfree = true;
+allowUnfree = true;
+
 #  st.conf = builtins.readFile ./.st.conf;
-  packageOverrides = pkgs: #with pkgs; 
+  packageOverrides = pkgs: with pkgs; 
   rec {
    libnoise = pkgs.callPackage ./libnoise.nix {};
    cacti = pkgs.callPackage ./cacti.nix {};
@@ -15,7 +18,7 @@
    search_paths = pkgs.callPackage ./search_paths.nix {};
    patchelf_git = pkgs.callPackage ./patchelf.nix {};
    pidginotr = pkgs.callPackage ./pidginotr.nix {};
-   kernel = pkgs.linux_3_13;
+   kernel = pkgs.linux_3_12;
    smapi = pkgs.callPackage ./smapi.nix {};
 
    envCactiEnv = pkgs.buildEnv {
@@ -78,6 +81,89 @@
      paths = with pkgs; [
        stdenv
        firefox
+       jre
+jrePlugin
+     ];
+     ignoreCollisions = true;
+   };
+   envDevelopEnv = pkgs.buildEnv {
+     name = "developenv";
+     paths = with pkgs; [
+       python27Packages.virtualenv
+       stdenv
+       python27
+python27Packages.sqlite3
+python27Packages.pysqlite
+#python27Packages.django
+python27Packages.django_tagging
+python27Packages.django_1_3
+sudo
+       sqlite # for pip install pysqlite
+       pulseaudio # palib
+       vim
+       portaudio
+       git
+       less
+       mysql
+       wget
+       cmake
+       alsaLib # pyalsaaudio
+       # zotero
+       glibc
+       gcc46
+       xulrunner
+       perl
+       zip unzip
+       utillinuxCurses
+       autoconf
+       strace
+       mysql
+       zlib # pip install mysql-python
+       curl # pip install pycurl2
+       python27Packages.pycurl
+       python27Packages.pycurl2
+       python27Packages.psutil
+
+       aubio
+
+       glibc #ldconfig
+
+       # opencv
+       pkgconfig
+       opencv
+       python27Packages.numpy
+       libv4l
+       v4l_utils
+       xlibs.xf86videov4l
+       linuxPackages.v4l2loopback
+       gstreamer
+     ];
+     ignoreCollisions = true;
+   };
+   envSemEnv = pkgs.buildEnv {
+     name = "semenv";
+     paths = with pkgs; [
+       stdenv
+       oraclejdk7
+     ];
+     ignoreCollisions = true;
+   };
+   envSem217Env = pkgs.buildEnv {
+     name = "sem217env";
+     paths = with pkgs; [
+       stdenv
+       jdk
+     ];
+     ignoreCollisions = true;
+   };
+   envLatexEnv = pkgs.buildEnv {
+     name = "latexenv";
+     paths = with pkgs; [
+       texLive
+       texLiveFull
+       texLiveExtra
+       texLiveContext
+       stdenv
      ];
      ignoreCollisions = true;
    };
@@ -135,10 +221,10 @@
       name = "desktopenv";
       paths = with pkgs; [
         stdenv
-#        (firefoxWrapper.override {
-#        #  jre = true;
-#            
-#	}) 
+        (firefoxWrapper.override {
+          jre = true;
+            
+	}) 
         jrePlugin
 
         #firefoxWrapper
@@ -337,5 +423,5 @@
   pkgs.pulseaudio = {
     jackaudioSupport = true;
   };
-#firefox.jre = true;
+firefox.jre = true;
 }
