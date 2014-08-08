@@ -6,123 +6,141 @@
 
 {
     nixpkgs.config = {
+        allowUnfree = true;
         packageOverrides = pkgs: {
+            firefox = pkgs.firefox.override{jre = true;};
+            #chromium = pkgs.chromium.override{enablePepperFlash = true; enablePepperPDF = true;};
+            chromium = pkgs.chromium.override{enablePepperFlash = true; };
             evince = pkgs.evince.override{ gtk3=pkgs.gtk384;  };
-        }; # overrides
-    }; # config 
+#            linux_3_4 = pkgs.linux_3_4.override {
+#                extraConfig =''
+#                   PM_TRACE y 
+#                   PM_TRACE_RTC y 
+#                  '';
+#              };
+#             linuxPackages = pkgs.linuxPackages_3_4;
+}; # overrides
+}; # config 
 
 powerManagement.enable = true;
 
 systemd.services."my-pre-suspend" =
-    {   description = "Pre-Suspend Actions";
-        wantedBy = [ "suspend.target" ];
-        before = [ "systemd-suspend.service" ];
-        script = ''
-                # usefull for debug that this part of code really runs
-                /run/current-system/sw/bin/date > /tmp/MY-PRE-RESUME
-                # add info to my personal time tracker
-                /run/current-system/sw/bin/echo  "$(/run/current-system/sw/bin/date +%Y-%m-%d-%H-%M-%S) PRESUSPEND" >> /home/lojze/newhacks/time_tracking.log 
-                # lock screen
-                /home/lojze/newhacks/root_exec.sh /run/current-system/sw/bin/xscreensaver-command -lock 2>/tmp/lock_err
-            '';
-        
-        serviceConfig.Type = "simple";
-    };
+{   description = "Pre-Suspend Actions";
+wantedBy = [ "suspend.target" ];
+before = [ "systemd-suspend.service" ];
+script = ''
+	# sync filesystems if suspend fails
+	/run/current-system/sw/bin/sync 
+	# usefull for debug that this part of code really runs
+	/run/current-system/sw/bin/date > /tmp/MY-PRE-RESUME
+	# add info to my personal time tracker
+	/run/current-system/sw/bin/echo  "$(/run/current-system/sw/bin/date +%Y-%m-%d-%H-%M-%S) PRESUSPEND" >> /home/lojze/newhacks/time_tracking.log 
+	# lock screen
+	/home/lojze/newhacks/root_exec.sh /run/current-system/sw/bin/xscreensaver-command -lock 2>/tmp/lock_err
+    '';
+
+serviceConfig.Type = "simple";
+};
 
 systemd.services."my-post-suspend" =
-    {   description = "Post-Suspend Actions";
-        wantedBy = [ "suspend.target" ];
-        after = [ "systemd-suspend.service" ];
-        script = ''
-                # usefull for debug that this part of code really runs
-                /run/current-system/sw/bin/date > /tmp/MY-POST-RESUME
-                # add info to my personal time tracker
-                /run/current-system/sw/bin/echo  "$(/run/current-system/sw/bin/date +%Y-%m-%d-%H-%M-%S) POSTSUSPEND" >> /home/lojze/newhacks/time_tracking.log 
-            '';
-        
-        serviceConfig.Type = "simple";
-    };
+{   description = "Post-Suspend Actions";
+wantedBy = [ "suspend.target" ];
+after = [ "systemd-suspend.service" ];
+script = ''
+	# usefull for debug that this part of code really runs
+	/run/current-system/sw/bin/date > /tmp/MY-POST-RESUME
+	# add info to my personal time tracker
+	/run/current-system/sw/bin/echo  "$(/run/current-system/sw/bin/date +%Y-%m-%d-%H-%M-%S) POSTSUSPEND" >> /home/lojze/newhacks/time_tracking.log 
+    '';
 
-  require =
-    [ # Include the results of the hardware scan.
+serviceConfig.Type = "simple";
+};
+
+require =
+[ # Include the results of the hardware scan.
 <nixos/modules/programs/virtualbox.nix>
-      ./hardware-configuration.nix
-    ];
-  boot.blacklistedKernelModules = [ "mei_me" ]; # 100% cpu load when craches
-  boot.kernelModules = [ "tun" "fuse" ];
-
-  boot.initrd.kernelModules =
-    [ # Specify all kernel modules that are necessary for mounting the root
-      #filesystem."/".device = "/dev/disk/by-label/nixos";
-      # "xfs" "ata_piix"
-    ];
-  boot.kernelPackages = pkgs.linuxPackages // {
-    virtualbox = pkgs.linuxPackages.virtualbox.override {
+./hardware-configuration.nix
+];
+boot.blacklistedKernelModules = [ "mei_me" "e1000e" ]; # 100% cpu load when craches, maybee issue for freezed suspend
+boot.kernelModules = [ "tun" "fuse" ];
+#boot.crashDump.enable = true;
+boot.initrd.kernelModules =
+[ # Specify all kernel modules that are necessary for mounting the root
+#filesystem."/".device = "/dev/disk/by-label/nixos";
+# "xfs" "ata_piix"
+];
+boot.kernelPackages = pkgs.linuxPackages // {
+virtualbox = pkgs.linuxPackages.virtualbox.override {
 #      enableExtensionPack = true; #should be 3_2 but with 3_4 also works even that is commented out
-    };
-  }; 
+};
+}; 
 
-  # Use the GRUB 2 boot loader.
-  boot.loader.grub.enable = true;
-  boot.loader.grub.version = 2;
+# Use the GRUB 2 boot loader.
+boot.loader.grub.enable = true;
+boot.loader.grub.version = 2;
 
-  # Define on which hard drive you want to install Grub.
-  boot.loader.grub.device = "/dev/sdb";
+# Define on which hard drive you want to install Grub.
+boot.loader.grub.device = "/dev/sdb";
 
-  networking.hostName = "nixos-think"; # Define your hostname.
-  networking.extraHosts = "54.230.44.9 cache.nixos.org\n54.217.220.47 nixos.org"; # it most likely timed out because of dns
-  networking.enableIPv6 = false; # postfix may doesn't work with ipv6
+networking.hostName = "nixos-think"; # Define your hostname.
+networking.extraHosts = "54.230.44.9 cache.nixos.org\n54.217.220.47 nixos.org"; # it most likely timed out because of dns
+networking.enableIPv6 = false; # postfix may doesn't work with ipv6
 
 
-  networking.networkmanager.enable = true; 
+networking.networkmanager.enable = true; 
 
-  # Add filesystem entries for each partition that you want to see
-  # mounted at boot time.  This should include at least the root
-  # filesystem.
+# Add filesystem entries for each partition that you want to see
+# mounted at boot time.  This should include at least the root
+# filesystem.
 
-  fileSystems."/" = {
-        device = "/dev/disk/by-label/nixos";
-        fsType = "ext4";      # the type of the partition
-         options = "defaults,discard,noatime,nodiratime,errors=remount-ro";
-  };
-  fileSystems."/tmp" = {
-      device = "tmpfs";
-      fsType = "tmpfs";
-      options = "nosuid,nodev,relatime,size=10G";
-  };
+fileSystems."/" = {
+device = "/dev/disk/by-label/nixos";
+fsType = "ext4";      # the type of the partition
+ options = "defaults,discard,noatime,nodiratime,errors=remount-ro";
+};
+fileSystems."/tmp" = {
+device = "tmpfs";
+fsType = "tmpfs";
+options = "nosuid,nodev,relatime,size=10G";
+};
 
-  # List swap partitions activated at boot time.
-  swapDevices =
-    [  { device = "/dev/disk/by-label/swap"; } ];
+# List swap partitions activated at boot time.
+swapDevices =
+[  { device = "/dev/disk/by-label/swap"; } ];
 
-  # List services that you want to enable:
-  services = {
-  
-    #postgresql.enable = true;
-    #mysql.enable = true;
-    postgresql.package = pkgs.postgresql;
-    redis.enable = true;
+# List services that you want to enable:
+services = {
+graphite.web.enable = true; 
+ntp.enable = false; 
+#postgresql.enable = true;
+mysql.enable = true;
+mysql.extraOptions = ''bind-address=127.0.0.1'';
+mysql.package = pkgs.mysql;
+postgresql.package = pkgs.postgresql;
+#redis.enable = true;
 
-    logind.extraConfig = "HandleLidSwitch=ignore";
- 
-  # Enable the OpenSSH daemon
-    openssh.enable = true;
-    openssh.permitRootLogin = "yes";
+logind.extraConfig = ''HandleLidSwitch=ignore
+HandleSuspendKey=suspend
+		   '';
 
-  # Enable CUPS to print documents.
-  # printing.enable = true;
+# Enable the OpenSSH daemon
+openssh.enable = false;
+openssh.permitRootLogin = "yes";
 
-    #sudo.enable = true;
+# Enable CUPS to print documents.
+# printing.enable = true;
 
-    rsnapshot = {
-        enable = true;
-        cronIntervals = { 
-            "daily" = "0 18 * * *"; # every day at 18 o'clock 
-            "weekly" = "0 19 * * 1"; # every monday at 19 o'clock 
-        };
+#sudo.enable = true;
 
-        # tab separated
-        extraConfig = ''
+rsnapshot = {
+enable = true;
+cronIntervals = { 
+    "daily" = "0 18 * * *"; # every day at 18 o'clock 
+    "weekly" = "0 19 * * 1"; # every monday at 19 o'clock 
+};
+
+# tab separated
+extraConfig = ''
 snapshot_root	/home/lojze/rsnapshot_root/
 
 retain	daily	7
@@ -137,6 +155,9 @@ exclude	/home/lojze/newhacks/chroot_vmware_view_client_i386/sys/
 exclude	/home/lojze/newhacks/chroot_vmware_view_client_i386/dev/
 exclude	/home/lojze/newhacks/chroot_vmware_view_client_i386/tmp/
 exclude	/home/lojze/newhacks/chroot_vmware_view_client_i386/home/lojze/.pulse
+
+exclude	/home/lojze/newhacks/chroot_zotero_i386/
+exclude	/home/lojze/newhacks/zotero/
 
 # $XDG_RUNTIME_DIR
 exclude	/home/lojze/newhacks/chroot_vmware_view_client_i386/run/user/499
@@ -165,57 +186,98 @@ exclude	/home/lojze/mp
 
 backup	/home/lojze	localhost/
 backup	/etc/	localhost/
+backup	/home/lojze/newhacks/zotero/home/lojze/	localhost/
 
 cmd_preexec	/home/lojze/newhacks/check_mounted.sh
 cmd_postexec	/run/current-system/sw/bin/bash -c "rsync -ahH --numeric-ids --delete --exclude=/home/lojze/newhacks/muska/sshfs /home/lojze/newhacks/muska/ /home/lojze/rsnapshot_root_muska/ && touch /home/lojze/rsnapshot_root_muska/; rsync -ahH --numeric-ids --delete /home/lojze/newhacks/fotke/ /home/lojze/rsnapshot_root_fotke/ && touch /home/lojze/rsnapshot_root_fotke/; sync" 
-                      '';
-    };
-    # Enable the X11 windowing system
-    xserver = {
-      displayManager.desktopManagerHandlesLidAndPower = false;
-      enable = true;
-      layout = "si";
-      xkbOptions = "eurosign:e";
+	      '';
+};
+# Enable the X11 windowing system
+xserver = {
+displayManager.desktopManagerHandlesLidAndPower = false;
+enable = true;
+layout = "si";
+xkbOptions = "eurosign:e";
 
-      desktopManager.xfce.enable = true;
-      desktopManager.default = "xfce";
-  };
-  postfix = {
+desktopManager.xfce.enable = true;
+desktopManager.default = "xfce";
+};
+cron.systemCronJobs = [ 
+"7 */5 * * *  lojze   bash /home/lojze/newhacks/nixos-configuration/bin/new_revision.sh >/dev/null 2>&1"
+"7 */5 * * *  lojze   bash /home/lojze/newhacks/nixos-configuration/bin/new_stable_revision.sh >/dev/null 2>&1"
+"@reboot root encfs --public --extpass=/home/lojze/newhacks/encfsprog.sh /home/lojze/.rsnapshot_root/ /home/lojze/rsnapshot_root"
+"@reboot root bash -c \"echo 1 > /sys/power/pm_trace\""
+];
+};
+users.extraUsers = {
+lojze = {
+createHome = true;
+uid = 499;
+extraGroups = [ "wheel" "networkmanager" "vboxusers" "postdrop" ];
+group = "users";
+home = "/home/lojze";
+shell = "/run/current-system/sw/bin/bash";
+};
+};
+
+hardware.pulseaudio.enable = true;
+#hardware.pulseaudio.configFile = "/etc/default_custom.pa";
+programs.bash.enableCompletion = true;  
+
+services.postfix = {
+    destination = [ "localhost" ];
     enable = true;
-    setSendmail = true;
-  };
-  cron.systemCronJobs = [ 
-    "7 */5 * * *  lojze   bash /home/lojze/newhacks/nixos-configuration/bin/new_revision.sh >/dev/null 2>&1"
-    "7 */5 * * *  lojze   bash /home/lojze/newhacks/nixos-configuration/bin/new_stable_revision.sh >/dev/null 2>&1"
-    "@reboot root encfs --public --extpass=/home/lojze/newhacks/encfsprog.sh /home/lojze/.rsnapshot_root/ /home/lojze/rsnapshot_root"
-  ];
-  };
-  users.extraUsers = {
-    lojze = {
-        createHome = true;
-        uid = 499;
-        extraGroups = [ "wheel" "networkmanager" "vboxusers" "postdrop" ];
-        group = "users";
-        home = "/home/lojze";
-        shell = "/run/current-system/sw/bin/bash";
-       };
-  };
-
-  hardware.pulseaudio.enable = true;
-  programs.bash.enableCompletion = true;  
-
+    extraConfig = '' 
+        relayhost = [blatnik.org]:8123
+    '';
+};
 
 environment = {
-    systemPackages = with pkgs; [
+systemPackages = with pkgs; [ # start_of_packages
 
 # == add here new packages ===
-
-##############################
+gnome3.eog
+graphite2
+mp3gain
+torbrowser
+beep
+sox
+patchelf
+oraclejdk
+processing
+#blueman
+#bluez
+dbus
+ntp
+alsaUtils
+xawtv
+debootstrap
+# processing plugins
+xlibs.libXxf86vm
+xlibs.libX11
+xlibs.libXrender
+binutils
+avrdude
+bzip2
+mpg321
+mpg123
+wireshark
+sysstat
+gitAndTools.tig
+gitg
+telnet
+jrePlugin
+xsane
+saneBackends
+saneFrontends
+inetutils
+#############################
+skype
 #test
 autossh
-connman
-connmanui
-mp3gain
+#connman
+#connmanui
+#mp3gain
 stress
 x11vnc
 psmisc
@@ -229,7 +291,7 @@ flashplayer
 flac
 
 exif
-e17.terminology
+#e17.terminology
 tmux
 mercurial
 xlibs.xev
@@ -240,7 +302,7 @@ saneBackends
 saneBackendsGit
 
 chromedriver
-wireshark
+# TODO wireshark
 #texLiveFull # huge package 
 
 fuse
@@ -252,10 +314,10 @@ iftop
 msmtp
 postfix
 vnstat
-beep
+#beep
 kismet
 parallel
-streamripper
+#streamripper
 
 #gnome_terminator
 gnome.vte
@@ -314,7 +376,6 @@ directvnc
 cdrkit
 
 python27Packages.sqlite3
-      mysql55
 
       acpitool
       acpi
@@ -345,7 +406,7 @@ evince
      encfs
      bind # nslookup, dig 
      xfce.terminal
-     eclipses.eclipse_sdk_422
+     eclipses.eclipse_sdk_431
      tree
      subversion
      mplayer2
@@ -488,8 +549,8 @@ transmission
       chromiumWrapper # browser
       firefoxWrapper # browser TODO couldn't be built
 # TODO firefox13Wrapper 
-torbrowser
-tor
+#torbrowser
+#tor
  
 ##      opera # browser
 #
@@ -533,6 +594,6 @@ tor
 ##      teeworlds
 ##      xonotic
 
-    ];
+    ]; # end_of_packages
   };
 }
