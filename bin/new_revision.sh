@@ -1,7 +1,8 @@
 
 date > /tmp/new_rev_last_run 
 
-rev=`wget -q  -S --output-document - http://nixos.org/channels/nixos-unstable/ 2>&1 | grep Location | awk -F '/' '{print $6}' | awk -F '.' '{print $3}'`
+rev=`wget -q  -S --output-document - http://nixos.org/channels/nixos-unstable/ 2>&1 | grep Location | awk -F '/' '{print $7}' | awk -F '.' '{print $3}'`
+com_rev=`wget -q  -S --output-document - http://nixos.org/channels/nixos-unstable/ 2>&1 | grep Location | awk -F '/' '{print $7}'`
 
 cur_dir=$(pwd)
 old_rev_loc="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/old_revision" 
@@ -19,9 +20,9 @@ if [ "$rev" != "$old_rev" ] && [ "$rev" != "" ]; then
     echo "$rev" > "$old_rev_loc" 
     message="$message"$'\nsaved new state' 
     
-    subject=$"Subject: New unstable release (old:$old_rev cur:$rev)"$'\n'
+    subject=$"Subject: New unstable release (old:$old_rev cur:$rev comrev:$com_rev)"$'\n'
 
-    git_change_tree=$(git log remotes/upstream/master --graph --decorate=full  --name-status "$old_rev".."$rev")
+    #git_change_tree=$(git log remotes/upstream/master --graph --decorate=full  --name-status "$old_rev".."$rev")
 
     content="$message\n\n\n"$"$git_change_tree\n"
 
